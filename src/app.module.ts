@@ -19,9 +19,15 @@ import { FollowModule } from './follow/follow.module';
 import { Like } from './like/entities/like.entity';
 import { Posts } from './posts/entities/post.entity';
 import { Comment } from './comment/entities/comment.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath:'.env',
+      isGlobal:true
+    }),
+    TypeOrmModule.forRoot({
     type: 'mysql',
     host: 'mysql-event-hoangchien220401-6255.a.aivencloud.com',
     port: 19790,

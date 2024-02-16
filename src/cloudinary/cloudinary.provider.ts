@@ -6,9 +6,9 @@ export const CloudinaryProvider = {
     console.log(process.env.CLOUDINARY_NAME);
     
     return cloudinary.config({
-        cloud_name:'delivery-food',
-        api_key: '832678553171937',
-        api_secret:'WYXFjxP0XRG7vcooHPfE0x3Qnzo',
+        cloud_name:process.env.CLOUDINARY_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret:process.env.CLOUDINARY_API_SECRET,
     });
   },
 };
