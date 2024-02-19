@@ -19,7 +19,7 @@ export class User {
     @Column({nullable:true})
     phone:string;
 
-    @Column({nullable:true})
+    @Column()
     role:number;
 
     @Column({nullable:true})

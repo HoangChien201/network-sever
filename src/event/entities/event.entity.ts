@@ -27,4 +27,6 @@ export class Event {
     @ManyToOne(type => Topic,topic => topic.events)
     topic:number
 
+    @Column()
+    address:string
 }

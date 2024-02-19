@@ -10,6 +10,9 @@ export class Posts {
     @Column()
     content:string;
 
+    @Column({nullable:true})
+    image:string;
+
     @ManyToOne(type=>Event)
     event_id:Event;
 
