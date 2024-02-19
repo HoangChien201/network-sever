@@ -27,6 +27,9 @@ export class CommentService {
     .where({
       posts_id:posts_id
     })
+    .orderBy({
+      create_time:'DESC'
+    })
     .getMany()
   }
 
