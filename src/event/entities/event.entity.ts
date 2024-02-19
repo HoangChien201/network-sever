@@ -12,7 +12,7 @@ export class Event {
     @Column()
     date_start:string;
 
-    @Column()
+    @Column({nullable:true})
     description:string;
     
     @Column()
