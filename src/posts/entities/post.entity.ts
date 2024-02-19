@@ -1,6 +1,6 @@
 import { Event } from "src/event/entities/event.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Posts {
@@ -18,4 +18,7 @@ export class Posts {
 
     @Column()
     user:number
+
+    @CreateDateColumn()
+    create_time:Date
 }
