@@ -4,6 +4,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Comment } from './entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class CommentService {
@@ -20,8 +21,13 @@ export class CommentService {
     }
   }
 
-  findByPosts() {
-    return `This action returns all comment`;
+  async findByPosts(posts_id:number):Promise<Comment[]> {
+    return await this.commnentRepository.createQueryBuilder('comment')
+    .leftJoinAndMapOne('comment.user',User,'user','user.id=comment.user')
+    .where({
+      posts_id:posts_id
+    })
+    .getMany()
   }
 
   update(id: number, updateCommentDto: UpdateCommentDto) {
@@ -30,7 +36,7 @@ export class CommentService {
 
   async remove(posts_id: number,user_id:number) {
     await this.commnentRepository.delete({
-      user_id:user_id,
+      user:user_id,
       posts_id:posts_id
     })
     return `unlike`;

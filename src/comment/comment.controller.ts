@@ -13,9 +13,9 @@ export class CommentController {
     return this.commentService.create(createCommentDto);
   }
 
-  @Get()
-  findAll() {
-    return this.commentService.findByPosts();
+  @Get('/get-by-posts/:posts_id')
+  findAllByPosts(@Param() posts_id:number) {
+    return this.commentService.findByPosts(posts_id);
   }
 
   @Delete('/delete?')
