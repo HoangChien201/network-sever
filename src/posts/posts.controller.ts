@@ -18,6 +18,11 @@ export class PostsController {
     return this.postsService.findByUser(+user_id);
   }
 
+  @Get('/get-all')
+  findAll():Promise<Posts[]> {
+    return this.postsService.findAll();
+  }
+
   @Get('/find-one/:id')
   findOne(@Param('id') id: number):Promise<Posts> {
     return this.postsService.findOne(+id);

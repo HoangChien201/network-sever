@@ -44,6 +44,14 @@ export class PostsService {
     }
   }
 
+  async findAll(): Promise<Posts[]> {
+    try {
+      return this.postsRepository.find();
+    } catch (error) {
+      return error
+    }
+  }
+
   async update(id: number, updatePostDto: UpdatePostDto) {
     try {
       const posts = await this.postsRepository.findOne(
