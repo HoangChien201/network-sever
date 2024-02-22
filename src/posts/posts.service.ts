@@ -39,6 +39,11 @@ export class PostsService {
 
   }
 
+  async findPosts(user_id: number): Promise<Posts[]> {
+    
+
+  }
+
   async findOne(id: number): Promise<Posts> {
     try {
       return this.postsRepository.findOne({ where: { id: id } });
@@ -87,7 +92,13 @@ export class PostsService {
 
   async findAll(): Promise<Posts[]> {
     try {
-      return this.postsRepository.find();
+      return this.postsRepository.createQueryBuilder('posts')
+      .leftJoinAndMapOne('posts.user', User, 'user', 'user.id = posts.user')
+      .leftJoinAndMapOne('posts.like',Like,'like','like.posts_id = posts.id')
+      .where({
+        status:1
+      })
+      .getMany()
     } catch (error) {
       return error
     }
