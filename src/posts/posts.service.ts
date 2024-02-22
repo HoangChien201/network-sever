@@ -39,11 +39,6 @@ export class PostsService {
 
   }
 
-  async findPosts(user_id: number): Promise<Posts[]> {
-    
-
-  }
-
   async findOne(id: number): Promise<Posts> {
     try {
       return this.postsRepository.findOne({ where: { id: id } });
