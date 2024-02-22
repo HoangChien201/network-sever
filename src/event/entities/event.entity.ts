@@ -12,6 +12,9 @@ export class Event {
     @Column()
     date_start:string;
 
+    @Column()
+    date_end:string;
+
     @Column({nullable:true})
     description:string;
     

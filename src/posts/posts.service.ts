@@ -15,7 +15,10 @@ export class PostsService {
   ) { }
   async create(createPostDto: CreatePostDto): Promise<Posts> {
     try {
-      return await this.postsRepository.save(createPostDto);
+      return await this.postsRepository.save({
+        ...createPostDto,
+        status:0
+      });
     } catch (error) {
       return error
     }
@@ -41,6 +44,44 @@ export class PostsService {
       return this.postsRepository.findOne({ where: { id: id } });
     } catch (error) {
       return error
+    }
+  }
+
+  async findBrowsePosts(): Promise<Posts[]> {
+    try {
+      return await this.postsRepository.find({
+        where:{
+          status:0
+        }
+      });
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async BrowseRejectPosts(id:number): Promise<string> {
+    try {
+      await this.postsRepository.createQueryBuilder()
+      .update(Posts)
+      .set({status:2})
+      .where("id = :id", { id: id })
+      .execute()
+      return 'rejected'
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async BrowseAcceptancePosts(id:number): Promise<string> {
+    try {
+      await this.postsRepository.createQueryBuilder()
+      .update(Posts)
+      .set({ status: 1 })
+      .where("id = :id", { id: id })
+      .execute()
+      return 'accepted'
+    } catch (error) {
+      return error;
     }
   }
 

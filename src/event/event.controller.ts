@@ -5,7 +5,7 @@ import { UpdateEventDto } from './dto/update-event.dto';
 
 @Controller('event')
 export class EventController {
-  constructor(private readonly eventService: EventService) {}
+  constructor(private readonly eventService: EventService) { }
 
   @Post()
   create(@Body() createEventDto: CreateEventDto) {
@@ -16,6 +16,25 @@ export class EventController {
   findAll() {
     return this.eventService.findAll();
   }
+
+  @Get('/get/browse-event')
+  async findBrowseEvent() {
+    return this.eventService.findBrowseEvent();
+
+  }
+
+  @Get('/browse-reject-event/:id')
+  async BrowseRejectEvent(@Param('id') id: number): Promise<string> {
+    return this.eventService.BrowseRejectEvent(id);
+
+  }
+
+  @Get('/browse-acceptance-event/:id')
+  async BrowseAcceptanceEvent(@Param('id') id: number): Promise<string> {
+    return this.eventService.BrowseAcceptanceEvent(id);
+
+  }
+
 
   @Get('/get-one/:id')
   findOne(@Param('id') id: string) {

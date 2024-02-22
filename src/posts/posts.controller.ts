@@ -37,4 +37,21 @@ export class PostsController {
   remove(@Param('id') id: number) {
     return this.postsService.remove(+id);
   }
+
+  @Get('/get/browse-posts')
+  async findBrowsePosts(): Promise<Posts[]> {
+    return await this.postsService.findBrowsePosts()
+  }
+
+  @Get('/browse-reject-posts/:id')
+  async BrowseRejectPosts(@Param('id') id:number): Promise<string> {
+    return await this.postsService.BrowseRejectPosts(id)
+   
+  }
+
+  @Get('/browse-acceptance-posts/:id')
+  async BrowseAcceptancePosts(@Param('id') id:number): Promise<string> {
+    return await this.postsService.BrowseAcceptancePosts(id)
+
+  }
 }

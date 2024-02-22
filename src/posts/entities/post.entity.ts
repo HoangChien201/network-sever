@@ -19,6 +19,9 @@ export class Posts {
     @Column()
     user:number
 
+    @Column()
+    status:number
+
     @CreateDateColumn()
     create_time:Date
 }
