@@ -28,6 +28,9 @@ export class EventService {
       return await this.eventRepository.find({
         order:{
           create_at:'DESC'
+        },
+        where:{
+          status:1
         }
       });
     } catch (error) {
