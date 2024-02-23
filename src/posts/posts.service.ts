@@ -53,14 +53,17 @@ export class PostsService {
 
   async findBrowsePosts(): Promise<Posts[]> {
     try {
-      return await this.postsRepository.find({
-        where:{
-          status:0
-        },
-        order:{
-          create_time:'DESC'
-        }
-      });
+      return await this.postsRepository
+      .createQueryBuilder('posts')
+      .leftJoinAndMapOne('posts.user', User, 'user', 'user.id = posts.user')
+      .where({
+        status:0
+      })
+      .orderBy({
+        create_time:'DESC'
+      })
+      .getMany()
+      
     } catch (error) {
       return error;
     }
