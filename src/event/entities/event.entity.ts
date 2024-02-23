@@ -35,4 +35,7 @@ export class Event {
 
     @CreateDateColumn()
     create_at:Date
+
+    @Column()
+    user:number
 }

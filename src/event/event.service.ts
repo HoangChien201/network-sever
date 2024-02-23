@@ -4,6 +4,7 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entities/event.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class EventService {
@@ -25,14 +26,33 @@ export class EventService {
 
   async findAll(): Promise<Event[]> {
     try {
-      return await this.eventRepository.find({
-        order:{
-          create_at:'DESC'
-        },
-        where:{
-          status:1
-        }
-      });
+      return await this.eventRepository.createQueryBuilder('event')
+        .leftJoinAndMapOne('event.user', User, 'user', 'user.id = event.user')
+        .orderBy(
+          {
+            create_at: 'DESC'
+          }
+        )
+        .getMany()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async findByUser(id: number): Promise<Event[]> {
+    try {
+      return await this.eventRepository
+        .createQueryBuilder('event')
+        .leftJoinAndMapOne('event.user', User, 'user', 'user.id = event.user')
+        .where({
+          user: id
+        })
+        .orderBy(
+          {
+            create_at: 'DESC'
+          }
+        )
+        .getMany()
     } catch (error) {
       return error;
     }
@@ -44,8 +64,8 @@ export class EventService {
         where: {
           status: 0
         },
-        order:{
-          create_at:'DESC'
+        order: {
+          create_at: 'DESC'
         }
       });
     } catch (error) {
@@ -62,7 +82,7 @@ export class EventService {
         .set({ status: 2 })
         .where("id = :id", { id: id })
         .orderBy({
-          create_at:'DESC'
+          create_at: 'DESC'
         })
         .execute()
 
@@ -75,10 +95,10 @@ export class EventService {
   async BrowseAcceptanceEvent(id: number): Promise<string> {
     try {
       await this.eventRepository.createQueryBuilder()
-      .update(Event)
-      .set({ status: 2 })
-      .where("id = :id", { id: id })
-      .execute()
+        .update(Event)
+        .set({ status: 2 })
+        .where("id = :id", { id: id })
+        .execute()
 
       return 'accepted'
     } catch (error) {

@@ -31,7 +31,7 @@ export class PostsService {
       .leftJoinAndMapOne('posts.like',Like,'like','like.posts_id = posts.id')
       .where({
         user:user_id,
-        status:1
+        // status:1
       })
       .orderBy({
         create_time:'DESC'
@@ -107,7 +107,7 @@ export class PostsService {
       .leftJoinAndMapOne('posts.user', User, 'user', 'user.id = posts.user')
       .leftJoinAndMapOne('posts.like',Like,'like','like.posts_id = posts.id')
       .where({
-        status:1
+        // status:1
       })
       .orderBy(
         {
