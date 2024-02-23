@@ -25,7 +25,11 @@ export class EventService {
 
   async findAll(): Promise<Event[]> {
     try {
-      return await this.eventRepository.find();
+      return await this.eventRepository.find({
+        order:{
+          create_at:'DESC'
+        }
+      });
     } catch (error) {
       return error;
     }
