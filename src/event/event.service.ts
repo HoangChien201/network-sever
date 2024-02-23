@@ -51,6 +51,9 @@ export class EventService {
         .update(Event)
         .set({ status: 2 })
         .where("id = :id", { id: id })
+        .orderBy({
+          create_at:'DESC'
+        })
         .execute()
 
       return 'rejected'

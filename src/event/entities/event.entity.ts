@@ -1,5 +1,5 @@
 import { Topic } from "src/topic/entities/topic.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Event {
@@ -32,4 +32,7 @@ export class Event {
 
     @Column()
     address:string
+
+    @CreateDateColumn()
+    create_at:Date
 }

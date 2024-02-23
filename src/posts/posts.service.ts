@@ -93,6 +93,11 @@ export class PostsService {
       .where({
         status:1
       })
+      .orderBy(
+        {
+          create_time:'DESC'
+        }
+      )
       .getMany()
     } catch (error) {
       return error
