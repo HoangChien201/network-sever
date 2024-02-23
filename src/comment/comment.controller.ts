@@ -14,7 +14,7 @@ export class CommentController {
   }
 
   @Get('/get-by-posts/:posts_id')
-  findAllByPosts(@Param() posts_id:number) {
+  findAllByPosts(@Param('posts_id') posts_id:number) {
     return this.commentService.findByPosts(posts_id);
   }
 
