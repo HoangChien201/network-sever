@@ -32,6 +32,9 @@ export class PostsService {
       .where({
         user:user_id
       })
+      .orderBy({
+        create_time:'DESC'
+      })
       .getMany()
     } catch (error) {
       return error
@@ -52,6 +55,9 @@ export class PostsService {
       return await this.postsRepository.find({
         where:{
           status:0
+        },
+        order:{
+          create_time:'DESC'
         }
       });
     } catch (error) {
@@ -65,6 +71,9 @@ export class PostsService {
       .update(Posts)
       .set({status:2})
       .where("id = :id", { id: id })
+      .orderBy({
+        create_time:'DESC'
+      })
       .execute()
       return 'rejected'
     } catch (error) {
@@ -78,6 +87,9 @@ export class PostsService {
       .update(Posts)
       .set({ status: 1 })
       .where("id = :id", { id: id })
+      .orderBy({
+        create_time:'DESC'
+      })
       .execute()
       return 'accepted'
     } catch (error) {
