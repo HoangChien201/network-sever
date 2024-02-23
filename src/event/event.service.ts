@@ -36,6 +36,9 @@ export class EventService {
       return await this.eventRepository.find({
         where: {
           status: 0
+        },
+        order:{
+          create_at:'DESC'
         }
       });
     } catch (error) {
