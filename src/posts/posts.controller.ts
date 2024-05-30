@@ -2,14 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Posts } from './entities/post.entity';
+import { Posts } from './entities/posts.entity';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto):Promise<Posts> {
+  create(@Body() createPostDto: CreatePostDto):Promise<CreatePostDto> {
     return this.postsService.create(createPostDto);
   }
 
@@ -36,22 +36,5 @@ export class PostsController {
   @Delete('/delete/:id')
   remove(@Param('id') id: number) {
     return this.postsService.remove(+id);
-  }
-
-  @Get('/get/browse-posts')
-  async findBrowsePosts(): Promise<Posts[]> {
-    return await this.postsService.findBrowsePosts()
-  }
-
-  @Get('/browse-reject-posts/:id')
-  async BrowseRejectPosts(@Param('id') id:number): Promise<string> {
-    return await this.postsService.BrowseRejectPosts(id)
-   
-  }
-
-  @Get('/browse-acceptance-posts/:id')
-  async BrowseAcceptancePosts(@Param('id') id:number): Promise<string> {
-    return await this.postsService.BrowseAcceptancePosts(id)
-
   }
 }

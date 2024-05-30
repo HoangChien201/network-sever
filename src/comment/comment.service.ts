@@ -38,10 +38,10 @@ export class CommentService {
   }
 
   async remove(posts_id: number,user_id:number) {
-    await this.commnentRepository.delete({
-      user:user_id,
-      posts_id:posts_id
-    })
-    return `unlike`;
+    // await this.commnentRepository.delete({
+    //   user:user_id,
+    //   posts_id:posts_id
+    // })
+    // return `unlike`;
   }
 }

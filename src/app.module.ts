@@ -3,23 +3,30 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
-import { Topic } from './topic/entities/topic.entity';
 import { User } from './user/entities/user.entity';
-import { Event } from './event/entities/event.entity';
-import { TopicModule } from './topic/topic.module';
-import { EventModule } from './event/event.module';
 import { DataSource } from 'typeorm';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
-import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
-import { RatingModule } from './rating/rating.module';
-import { FollowModule } from './follow/follow.module';
-import { Like } from './like/entities/like.entity';
-import { Posts } from './posts/entities/post.entity';
+import { Posts } from './posts/entities/posts.entity';
 import { Comment } from './comment/entities/comment.entity';
 import { ConfigModule } from '@nestjs/config';
+import { LikePostsModule } from './like-posts/like-posts.module';
+import { LikeCommentModule } from './like-comment/like-comment.module';
+import { FriendshipModule } from './friendship/friendship.module';
+import { MessageModule } from './message/message.module';
+import { GroupChatModule } from './group-chat/group-chat.module';
+import { GroupMemberModule } from './group-member/group-member.module';
+import { MediaModule } from './media/media.module';
+import { LikePost } from './like-posts/entities/like-post.entity';
+import { LikeComment } from './like-comment/entities/like-comment.entity';
+import { TagPostsModule } from './tag-posts/tag-posts.module';
+import { Media } from './media/entities/media.entity';
+import { TagPost } from './tag-posts/entities/tag-post.entity';
+import { GroupMember } from './group-member/entities/group-member.entity';
+import { GroupChat } from './group-chat/entities/group-chat.entity';
+import { Message } from './message/entities/message.entity';
 
 @Module({
   imports: [
@@ -29,24 +36,27 @@ import { ConfigModule } from '@nestjs/config';
     }),
     TypeOrmModule.forRoot({
     type: 'mysql',
-    host: 'mysql-event-hoangchien220401-6255.a.aivencloud.com',
-    port: 19790,
-    username: 'avnadmin',
-    password: 'AVNS_C3GX0oWgNQNDEl4kl_F',
-    database: 'defaultdb',
-    entities: [Topic,User,Event,Comment,Like,Posts],
-    synchronize: true,
+    host: '127.0.0.1',
+    port: 3306,
+    username: 'root',
+    password: '123456',
+    database: 'networkDB',
+    entities: [User,Comment,LikePost,LikeComment,Posts,Media,TagPost,GroupMember,GroupChat,Message],
+    synchronize: false,
   }),
-  TopicModule,
   UserModule,
-  EventModule,
   CloudinaryModule,
   AuthModule,
   PostsModule,
-  LikeModule,
   CommentModule,
-  RatingModule,
-  FollowModule
+  LikePostsModule,
+  LikeCommentModule,
+  FriendshipModule,
+  MessageModule,
+  GroupChatModule,
+  GroupMemberModule,
+  MediaModule,
+  TagPostsModule,
 ],
   controllers: [AppController],
   providers: [AppService],

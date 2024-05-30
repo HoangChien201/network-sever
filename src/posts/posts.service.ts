@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Posts } from './entities/post.entity';
+import { Posts } from './entities/posts.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
-import { Like } from 'src/like/entities/like.entity';
 
 @Injectable()
 export class PostsService {
@@ -13,12 +12,9 @@ export class PostsService {
     @InjectRepository(Posts)
     private readonly postsRepository: Repository<Posts>
   ) { }
-  async create(createPostDto: CreatePostDto): Promise<Posts> {
+  async create(createPostDto: CreatePostDto): Promise<CreatePostDto> {
     try {
-      return await this.postsRepository.save({
-        ...createPostDto,
-        status:0
-      });
+      return await this.postsRepository.save(createPostDto);
     } catch (error) {
       return error
     }
@@ -26,16 +22,11 @@ export class PostsService {
 
   async findByUser(user_id: number): Promise<Posts[]> {
     try {
-      return this.postsRepository.createQueryBuilder('posts')
-      .leftJoinAndMapOne('posts.user', User, 'user', 'user.id = posts.user')
-      .leftJoinAndMapOne('posts.like',Like,'like','like.posts_id = posts.id')
-      .where({
-        user:user_id,
-        // status:1
-      })
-      .orderBy({
-        create_time:'DESC'
-      })
+      return this.postsRepository
+      .createQueryBuilder('posts')
+      .leftJoinAndSelect('posts.creater','creater')
+      .innerJoinAndSelect('COUNT(posts.likes)','like')
+      .where({creater:user_id})
       .getMany()
     } catch (error) {
       return error
@@ -51,70 +42,21 @@ export class PostsService {
     }
   }
 
-  async findBrowsePosts(): Promise<Posts[]> {
-    try {
-      return await this.postsRepository
-      .createQueryBuilder('posts')
-      .leftJoinAndMapOne('posts.user', User, 'user', 'user.id = posts.user')
-      .where({
-        status:0
-      })
-      .orderBy({
-        create_time:'DESC'
-      })
-      .getMany()
-      
-    } catch (error) {
-      return error;
-    }
-  }
-
-  async BrowseRejectPosts(id:number): Promise<string> {
-    try {
-      await this.postsRepository.createQueryBuilder()
-      .update(Posts)
-      .set({status:2})
-      .where("id = :id", { id: id })
-      .orderBy({
-        create_time:'DESC'
-      })
-      .execute()
-      return 'rejected'
-    } catch (error) {
-      return error;
-    }
-  }
-
-  async BrowseAcceptancePosts(id:number): Promise<string> {
-    try {
-      await this.postsRepository.createQueryBuilder()
-      .update(Posts)
-      .set({ status: 1 })
-      .where("id = :id", { id: id })
-      .orderBy({
-        create_time:'DESC'
-      })
-      .execute()
-      return 'accepted'
-    } catch (error) {
-      return error;
-    }
-  }
 
   async findAll(): Promise<Posts[]> {
     try {
-      return this.postsRepository.createQueryBuilder('posts')
-      .leftJoinAndMapOne('posts.user', User, 'user', 'user.id = posts.user')
-      .leftJoinAndMapOne('posts.like',Like,'like','like.posts_id = posts.id')
-      .where({
-        // status:1
-      })
-      .orderBy(
-        {
-          create_time:'DESC'
-        }
-      )
-      .getMany()
+      // return this.postsRepository.createQueryBuilder('posts')
+      // .leftJoinAndMapOne('posts.user', User, 'user', 'user.id = posts.user')
+      // .leftJoinAndMapOne('posts.like',Like,'like','like.posts_id = posts.id')
+      // .where({
+      //   // status:1
+      // })
+      // .orderBy(
+      //   {
+      //     create_time:'DESC'
+      //   }
+      // )
+      // .getMany()
     } catch (error) {
       return error
     }
