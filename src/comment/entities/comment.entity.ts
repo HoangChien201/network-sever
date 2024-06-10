@@ -1,7 +1,7 @@
 import { LikeComment } from "src/like-comment/entities/like-comment.entity";
 import { Posts } from "src/posts/entities/posts.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Comment {
@@ -9,15 +9,15 @@ export class Comment {
     id:number
 
     @ManyToOne(()=>Posts,(posts)=>posts.id)
-    posts_id:number | Posts;
+    posts:number;
 
     @ManyToOne(()=>User,(user)=>user.id)
-    user_id:number | User;
+    user:number ;
 
     @ManyToOne(()=>Comment,(comment)=>comment.id)
-    parent_id:number | Comment;
+    parent:number | Comment;
 
-    @OneToMany(()=>LikeComment,(likeComment)=>likeComment.comment_id)
+    @OneToMany(()=>LikeComment,(likeComment)=>likeComment.comment)
     likeComment:number | LikeComment[];
 
     @Column()
@@ -30,5 +30,5 @@ export class Comment {
     create_at:Date
 
     @UpdateDateColumn()
-    udpate_at:Date
+    update_at:Date
 }

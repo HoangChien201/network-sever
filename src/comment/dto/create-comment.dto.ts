@@ -1,5 +1,5 @@
 export class CreateCommentDto {
-    posts_id:number;
-    user_id:number;
+    posts:number;
     content:string;
+    parent:number;
 }

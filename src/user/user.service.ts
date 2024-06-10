@@ -4,38 +4,219 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { USER_ID_HEADER_NAME } from 'src/auth/constant';
+import { Friendship } from 'src/friendship/entities/friendship.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository:Repository<User>
-  ){}
-  async create(createUserDto: CreateUserDto):Promise<User> {
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Friendship)
+    private readonly friendShipRepository: Repository<Friendship>
+  ) { }
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const saltOrRounds = parseInt(process.env.SALTORROUNDS)
+
+    const password = createUserDto.password.toString();
+
+    const passwordHashed = await bcrypt.hash(password, saltOrRounds);
+
+    createUserDto.password = passwordHashed
     return await this.userRepository.save(createUserDto);
   }
 
-  async findAll():Promise<User[]> {
+  async findAll(): Promise<User[]> {
     return await this.userRepository.find();
   }
 
-  async findOne(id: number): Promise<User | null> {
-    return await this.userRepository.findOneBy({ id });
+  async findOne(user_id: number, request: Request): Promise<User | null> {
+    //get id of user request
+    const user_req = request.headers[USER_ID_HEADER_NAME]
+
+    //get user
+    const userQuery = await this.userRepository.findOne({
+      where: {
+        id: user_id
+      }
+    });
+
+    // // lấy danh sách bạn bè của user   
+    const friendOfUser = await this.friendShipRepository
+      .createQueryBuilder('f')
+      .where(
+        `user1=:user_id AND user2=:user_req`, { user_req: user_req, user_id: user_id }
+      )
+      .orWhere(
+        ` user1=:user_req AND user2=:user_id`, { user_req: user_req, user_id: user_id }
+      )
+      .getOne()
+
+    //lọc id bạn bè của user
+    const statusFriend = this.FilterStatusFriend(user_req, friendOfUser)
+
+    userQuery['relationship'] = statusFriend
+    return userQuery
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOneBy({ email:email });
+    return await this.userRepository.findOneBy({ email: email });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto):Promise<User> {
-    const user=await this.userRepository.findOneBy({id:id})
-    return this.userRepository.save({
-      ...user,
-      ...updateUserDto
+  async historyActivitiy(request: Request): Promise<User> {
+    //get user from token
+    const user_id = request.headers[USER_ID_HEADER_NAME];
+
+    const historyLikes = await this.userRepository
+      .createQueryBuilder('u')
+      //joinlikePost
+      .leftJoin('u.likePosts', 'lp')
+      .addSelect(['lp.reaction', 'lp.create_at', 'lp.update_at'])
+
+      //joinPost
+      .leftJoinAndSelect('lp.posts', 'posts')
+      .leftJoin('posts.creater', 'creater')
+      .addSelect(['creater.fullname', 'creater.id'])
+
+      //join like comment
+      .leftJoinAndSelect('u.likeComments', 'lc')
+      .leftJoin('lc.user', 'uLikeC')
+      .addSelect(['uLikeC.fullname', 'uLikeC.id'])
+
+      //join comment
+      .leftJoinAndSelect('u.comments', 'comment')
+      .leftJoinAndSelect('comment.posts', 'pComment')
+      .leftJoin('pComment.creater', 'pComment_Creater')
+      .addSelect(['pComment_creater.fullname', 'pComment_creater.id'])
+
+      .where({
+        id: user_id
+      })
+      .getOne()
+
+    historyLikes.password = undefined
+
+    return historyLikes;
+  }
+
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<any> {
+    try {
+      const user = await this.userRepository.findOneBy({ id: id })
+
+      await this.userRepository.save({
+        ...user,
+        ...updateUserDto
+      })
+
+      return {
+        status: 1,
+        message: "OK"
+      }
+    } catch (error) {
+      return {
+        status: -1,
+        message: error
+      }
+    }
+
+  }
+
+  async remove(id: number): Promise<any> {
+    
+    try {
+      await this.userRepository.delete(id);
+
+      return {
+        status: 1,
+        message: "OK"
+      }
+    } catch (error) {
+      return {
+        status: -1,
+        message: error
+      }
+    }
+  }
+
+  async search(keyword: string, request: Request) {
+    //get id of user request
+    const user_req = request.headers[USER_ID_HEADER_NAME]
+
+    // // lấy danh sách bạn bè của user   
+    const friendOfUser = await this.friendShipRepository
+      .createQueryBuilder('f')
+      .where({
+        user1: user_req
+      })
+      .orWhere({
+        user2: user_req
+      }).getMany()
+
+    // //lọc id bạn bè của user
+    const friendOfUsers = friendOfUser.map(f => {
+      return this.FilterStatusFriend(user_req, f)
     })
+
+    // lấy danh sách bạn bè của user
+    const resultUserFinded = await this.userRepository
+      .createQueryBuilder('u')
+      .select(['u.id', 'u.fullname', 'u.avatar'])
+      .where(
+        `u.fullname LIKE '%${keyword}%'`
+      )
+      .getMany()
+
+    //lấy danh sách mối quan hệ giữa người dùng và người tìm được
+
+    friendOfUsers.forEach((f) => {
+      const index = resultUserFinded.findIndex(r => r.id === f.user)
+
+      if (index !== -1) {
+        if (f.status === 1) {
+          resultUserFinded[index]['relationship'] = {
+            status: f.status,
+            user_req: f.user_req
+          }
+          return
+        }
+        resultUserFinded[index]['relationship'] = {
+          status: f.status,
+        }
+      }
+    })
+
+    return resultUserFinded;
   }
 
-  async remove(id: number):Promise<void> {
-    await this.userRepository.delete(id);
+  FilterStatusFriend(user_req: number, f: any) {
+    if (f === null) return null;
+
+    const { user1, user2, status } = f
+    if (user1 === user_req) {
+      if (status == 1) {
+        return {
+          user: user2,
+          status,
+          user_req: user1
+        }
+      }
+      return {
+        user: user2,
+        status
+      }
+    }
+    if (status == 1) {
+      return {
+        user: user1,
+        status,
+        user_req: user1
+      }
+    }
+    return {
+      user: user1,
+      status
+    }
   }
 }

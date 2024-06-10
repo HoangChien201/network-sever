@@ -12,10 +12,4 @@ export class AuthController {
         return this.authService.signIn(signInDto.email,signInDto.password);
     }
 
-    // @HttpCode(HttpStatus.OK)
-    // @Post('sign-in-admin')
-    // async loginAdmin(@Body() signInDto:Record<string,any> ){
-    //     return this.authService.signInAdmin(signInDto.email,signInDto.password);
-    // }
-
 }

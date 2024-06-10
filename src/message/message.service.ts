@@ -1,26 +1,72 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Message } from './entities/message.entity';
+import { Repository } from 'typeorm';
+import { LikeMessage } from 'src/like-message/entities/like-message.entity';
 
 @Injectable()
 export class MessageService {
-  create(createMessageDto: CreateMessageDto) {
-    return 'This action adds a new message';
+
+  constructor(
+    @InjectRepository(Message)
+    private readonly messageReposity: Repository<Message>
+  ) { }
+
+  async create(createMessageDto: CreateMessageDto): Promise<Message> {
+    return await this.messageReposity.save(createMessageDto);
   }
 
-  findAll() {
-    return `This action returns all message`;
+  async findByGroup(group_id: number): Promise<Message[]> {
+    const messages = await this.messageReposity
+      .createQueryBuilder('m')
+      .leftJoin('m.sender', 'sender')
+      .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
+      .leftJoin('m.reactions','reactions')
+      .addSelect('reactions.reaction')
+      .where({
+        group: group_id
+      })
+      .orderBy('m.create_at','DESC')
+      .getMany()
+
+    return messages;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} message`;
+
+  async update(id: number, updateMessageDto: UpdateMessageDto) {
+    try {
+      const message = await this.messageReposity.findOne({ where: { id: id } })
+
+      await this.messageReposity.save({
+        ...message,
+        ...updateMessageDto
+      })
+      return {
+        status: 1,
+        message: "Update Success"
+      };
+    } catch (error) {
+      return {
+        status: 0,
+        message: "Update Failed"
+      };
+    }
   }
 
-  update(id: number, updateMessageDto: UpdateMessageDto) {
-    return `This action updates a #${id} message`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} message`;
+  async remove(id: number) {
+    try {
+      await this.messageReposity.delete({ id: id })
+      return {
+        status: 1,
+        message: "Delete Success"
+      };
+    } catch (error) {
+      return {
+        status: 0,
+        message: "Delete Failed"
+      };
+    }
   }
 }

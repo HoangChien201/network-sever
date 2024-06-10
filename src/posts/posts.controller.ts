@@ -1,34 +1,56 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, Req, UseGuards } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Posts } from './entities/posts.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
+
+export type bodyGetByUser={
+  permission:number;
+  user_id:number
+}
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto):Promise<CreatePostDto> {
-    return this.postsService.create(createPostDto);
+  @UseGuards(AuthGuard)
+  create(@Body() createPostDto: CreatePostDto,@Req() req:Request):Promise<CreatePostDto> {
+    return this.postsService.create(createPostDto,req);
   }
 
-  @Get('/get-by-user/:user_id')
-  findByUser(@Param('user_id') user_id:number):Promise<Posts[]> {
-    return this.postsService.findByUser(+user_id);
+  @Get('/get-by-user/:id')
+  @UseGuards(AuthGuard)
+  findByUser(@Param('id') id:number,@Req() req:Request):Promise<Posts[]> {
+    return this.postsService.findByUser(req,id);
+  }
+
+  @Get('/get-by-user-request')
+  @UseGuards(AuthGuard)
+  findByUserRequest(@Req() req:Request):Promise<Posts[]> {
+    return this.postsService.findByUserRequest(req);
+  }
+
+  @Get('/get-share/:posts_id')
+  @UseGuards(AuthGuard)
+  findShare(@Param('posts_id') posts_id:number,@Req() req:Request):Promise<Posts[]> {
+    return this.postsService.findShare(+posts_id,req);
   }
 
   @Get('/get-all')
-  findAll():Promise<Posts[]> {
-    return this.postsService.findAll();
+  @UseGuards(AuthGuard)
+  findAll(@Req() req):Promise<Posts[]> {
+    return this.postsService.findAll(req);
   }
 
   @Get('/find-one/:id')
-  findOne(@Param('id') id: number):Promise<Posts> {
-    return this.postsService.findOne(+id);
+  @UseGuards(AuthGuard)
+  findOne(@Param('id') id: number,@Req() req):Promise<Posts> {
+    return this.postsService.findOne(+id,req);
   }
 
-  @Patch('/update/:id')
+  @Put('/update/:id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
   }

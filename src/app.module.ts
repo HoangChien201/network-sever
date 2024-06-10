@@ -27,8 +27,16 @@ import { TagPost } from './tag-posts/entities/tag-post.entity';
 import { GroupMember } from './group-member/entities/group-member.entity';
 import { GroupChat } from './group-chat/entities/group-chat.entity';
 import { Message } from './message/entities/message.entity';
+import { Friendship } from './friendship/entities/friendship.entity';
+import { SocketModule } from './socket/socket.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { PasswordModule } from './password/password.module';
+import { LikeMessageModule } from './like-message/like-message.module';
+import { LikeMessage } from './like-message/entities/like-message.entity';
 
 @Module({
+  
   imports: [
     ConfigModule.forRoot({
       envFilePath:'.env',
@@ -41,9 +49,34 @@ import { Message } from './message/entities/message.entity';
     username: 'root',
     password: '123456',
     database: 'networkDB',
-    entities: [User,Comment,LikePost,LikeComment,Posts,Media,TagPost,GroupMember,GroupChat,Message],
+    entities: [User,Friendship,Posts,Comment,LikeComment,LikePost,Message,Media,TagPost,GroupChat,GroupMember,LikeMessage],
     synchronize: false,
+    autoLoadEntities:true
   }),
+  MailerModule.forRoot({
+    transport: {
+      host: 'smtp.gmail.com',
+      port: 587,
+      ignoreTLS: false,
+      secure: false,
+      auth: {
+        user: process.env.MAILDEV_INCOMING_USER,
+        pass: process.env.MAILDEV_INCOMING_PASS
+      },
+    },
+    defaults: {
+      from: '"No Reply" <no-reply@localhost>',
+    },
+    preview: false,
+    template: {
+      dir: process.cwd() + '/template/',
+      adapter: new HandlebarsAdapter(), 
+      options: {
+        strict: true,
+      },
+    },
+  }),
+  FriendshipModule,
   UserModule,
   CloudinaryModule,
   AuthModule,
@@ -57,6 +90,9 @@ import { Message } from './message/entities/message.entity';
   GroupMemberModule,
   MediaModule,
   TagPostsModule,
+  SocketModule,
+  PasswordModule,
+  LikeMessageModule
 ],
   controllers: [AppController],
   providers: [AppService],

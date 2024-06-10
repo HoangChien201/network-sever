@@ -10,7 +10,7 @@ export class Posts {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({nullable:true})
     content: string;
 
     //relation user
@@ -18,15 +18,15 @@ export class Posts {
     creater: User | number
 
     //relation share
-    @OneToMany(() => Posts, (posts) => posts.share_id)
-    share_id: Posts[]
+    @ManyToOne(() => Posts, (posts) => posts.share)
+    share: Posts | number
 
     //relation like_post
-    @OneToMany(() => LikePost, (likePosts) => likePosts.posts_id)
+    @OneToMany(() => LikePost, (likePosts) => likePosts.posts)
     likes: LikePost[]
 
     //relation comment
-    @OneToMany(() => Comment, (commnet) => commnet.posts_id)
+    @OneToMany(() => Comment, (comment) => comment.posts)
     comment: Comment[]
 
     //relation media
@@ -45,4 +45,7 @@ export class Posts {
 
     @Column()
     permission: number
+
+    @Column()
+    type:number
 }

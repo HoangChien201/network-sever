@@ -1,15 +1,22 @@
 import { User } from "src/user/entities/user.entity";
-import { Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Friendship {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
+    id:number
+
+    @Column()
     @ManyToOne(()=>User,(user)=>user.id)
-    user_id1:number
+    user1:number
+
+    @Column()
+    @ManyToOne(()=>User,(user)=>user.id)
+    user2:number
 
     @PrimaryColumn()
-    @ManyToOne(()=>User,(user)=>user.id)
-    user_id2:number
-
+    status:number
     
+    @CreateDateColumn()
+    create_at:Date
 }

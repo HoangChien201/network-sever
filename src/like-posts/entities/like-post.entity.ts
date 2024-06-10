@@ -1,18 +1,24 @@
 import { Posts } from "src/posts/entities/posts.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class LikePost {
     @PrimaryColumn()
-    @ManyToOne(()=>Posts,(posts)=>posts.id)
-    posts_id:number
+    @ManyToOne(()=>Posts,(posts)=>posts.likes)
+    posts:number
 
     @PrimaryColumn()
-    @ManyToOne(()=>User,(user)=>user.id)
-    user_id:number
+    @ManyToOne(()=>User,(user)=>user.likePosts)
+    user:number
 
     @Column()
     reaction:number
+
+    @CreateDateColumn()
+    create_at:Date
+
+    @UpdateDateColumn()
+    update_at:Date
 
 }

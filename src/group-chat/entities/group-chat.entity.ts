@@ -7,12 +7,18 @@ export class GroupChat {
     @PrimaryGeneratedColumn()
     id:number
 
-    @Column()
+    @Column({nullable:true})
     name:string
 
-    @OneToMany(()=>GroupMember,(g_member)=>g_member.group_id)
+    @Column()
+    type:string
+
+    @Column({nullable:true})
+    image:string
+
+    @OneToMany(()=>GroupMember,(g_member)=>g_member.group)
     members:GroupMember[]
 
-    @OneToMany(()=>Message,(msg)=>msg.group_id)
+    @OneToMany(()=>Message,(msg)=>msg.group)
     messages:Message[]
 }

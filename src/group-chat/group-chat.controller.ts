@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Put } from '@nestjs/common';
 import { GroupChatService } from './group-chat.service';
 import { CreateGroupChatDto } from './dto/create-group-chat.dto';
 import { UpdateGroupChatDto } from './dto/update-group-chat.dto';
+import { GroupChat } from './entities/group-chat.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('group-chat')
 export class GroupChatController {
@@ -12,23 +14,19 @@ export class GroupChatController {
     return this.groupChatService.create(createGroupChatDto);
   }
 
-  @Get()
-  findAll() {
-    return this.groupChatService.findAll();
+  @Get('/get-by-user')
+  @UseGuards(AuthGuard)
+  async findByUser(@Req() req:Request):Promise<GroupChat[]> {
+    return this.groupChatService.findByUser(req);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.groupChatService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGroupChatDto: UpdateGroupChatDto) {
+  @Put('/update/:id')
+  async update(@Param('id') id: string, @Body() updateGroupChatDto: UpdateGroupChatDto) {
     return this.groupChatService.update(+id, updateGroupChatDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('/delete/:id')
+  async remove(@Param('id') id: string) {
     return this.groupChatService.remove(+id);
   }
 }

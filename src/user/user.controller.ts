@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { AuthMiddleware } from 'src/auth/auth.middleware';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -18,17 +20,30 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string):Promise<User | null> {
-    return this.userService.findOne(+id);
+  @Get('get-one/:id')
+  @UseGuards(AuthGuard)
+  findOne(@Param('id') id: string,@Req() req:Request):Promise<User | null> {
+    return this.userService.findOne(+id,req);
   }
 
-  @Patch(':id')
+  @Get('history-activity')
+  @UseGuards(AuthGuard)
+  historyActivity(@Req() req:Request):Promise<User> {
+    return this.userService.historyActivitiy(req);
+  }
+
+  @Get('/search?')
+  @UseGuards(AuthGuard)
+  search(@Req() req:Request,@Query('keyword') keyword:string):Promise<User[]> {
+    return this.userService.search(keyword,req);
+  }
+
+  @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto):Promise<User|null> {
     return this.userService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   remove(@Param('id') id: string):Promise<void> {
     return this.userService.remove(+id);
   }

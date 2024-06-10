@@ -6,11 +6,11 @@ import { Entity, ManyToOne, PrimaryColumn } from "typeorm";
 export class GroupMember {
     @PrimaryColumn()
     @ManyToOne(()=>GroupChat,(group)=>group.id)
-    group_id:number
+    group:number
 
     @PrimaryColumn()
     @ManyToOne(()=>User,(user)=>user.id)
-    user_id:number
+    user:number
 
 
 }

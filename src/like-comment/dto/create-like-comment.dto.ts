@@ -1,1 +1,4 @@
-export class CreateLikeCommentDto {}
+export class CreateLikeCommentDto {
+    comment:number;
+    reaction:number
+}

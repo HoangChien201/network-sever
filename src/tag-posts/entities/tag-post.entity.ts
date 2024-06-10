@@ -4,12 +4,12 @@ import { Entity, ManyToOne, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class TagPost {
-    @PrimaryColumn()
     @ManyToOne(()=>Posts,(posts)=>posts.id)
+    @PrimaryColumn()
     posts_id:number
 
-    @PrimaryColumn()
     @ManyToOne(()=>User,(user)=>user.id)
-    user_id:number
+    @PrimaryColumn()
+    user:number
 
 }

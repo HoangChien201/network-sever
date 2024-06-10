@@ -1,48 +1,35 @@
-import { Injectable,UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import * as bcrypt from 'bcrypt';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private userService:UserService,
-        private jwtService:JwtService
-    ){}
+        private userService: UserService,
+        private jwtService: JwtService,
+    ) { }
 
-    async signIn(email:string,pass:string):Promise<any>{
-        
-        const user= await this.userService.findUserByEmail(email)
-        
-        if(user?.password.toString() !== pass.toString()){
+    async signIn(email: string, pass: string): Promise<any> {
+
+        const user = await this.userService.findUserByEmail(email)
+        const isMatch = await bcrypt.compare(pass.toString(), user.password);
+
+        if (!isMatch) {
             throw new UnauthorizedException;
         }
 
-        user.password=undefined;
+        user.password = undefined;
         const payload = { user: user };
-        const token=await this.jwtService.signAsync(payload)
+        const token = await this.jwtService.signAsync(payload)
         return {
-            data:{
+            data: {
                 ...user,
                 token
             }
         }
     }
 
-    // async signInAdmin(email:string,pass:string):Promise<UserInterface>{
-    //     const user= await this.userService.findByEmail(email)
-        
-    //     if(user?.role !== 'admin'){
-    //         throw new UnauthorizedException;
-    //     }
-
-    //     if(user?.password !== pass){
-    //         throw new UnauthorizedException;
-    //     }
-
-    //     const payload = { user: user };
-    //     const token=await this.jwtService.signAsync(payload)
-    //     user.token=token
-    //     return user
-    // }
 
 }

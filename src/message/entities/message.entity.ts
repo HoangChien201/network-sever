@@ -1,6 +1,7 @@
 import { GroupChat } from "src/group-chat/entities/group-chat.entity";
+import { LikeMessage } from "src/like-message/entities/like-message.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Message {
@@ -8,10 +9,10 @@ export class Message {
     id:number
 
     @ManyToOne(()=>User,(user)=>user.id)
-    sender:number
+    sender:number | Message
 
     @ManyToOne(()=>GroupChat,(group)=>group.id)
-    group_id:number
+    group:number | GroupChat
 
     @CreateDateColumn()
     create_at:Date
@@ -23,8 +24,14 @@ export class Message {
     state:number
 
     @Column()
-    type:number
+    type:string
 
     @Column()
     message:string
+
+    @ManyToOne(()=>Message,(msg)=>msg.id)
+    parent:Message | null
+
+    @OneToMany(()=>LikeMessage,(like)=>like.message)
+    reactions:LikeMessage[]
 }

@@ -1,1 +1,4 @@
-export class CreateTagPostDto {}
+export class CreateTagPostDto {
+    posts_id:number;
+    user:number
+}

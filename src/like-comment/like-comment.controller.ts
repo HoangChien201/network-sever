@@ -1,34 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseGuards } from '@nestjs/common';
 import { LikeCommentService } from './like-comment.service';
 import { CreateLikeCommentDto } from './dto/create-like-comment.dto';
 import { UpdateLikeCommentDto } from './dto/update-like-comment.dto';
+import { LikeComment } from './entities/like-comment.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('like-comment')
 export class LikeCommentController {
   constructor(private readonly likeCommentService: LikeCommentService) {}
 
   @Post()
-  create(@Body() createLikeCommentDto: CreateLikeCommentDto) {
-    return this.likeCommentService.create(createLikeCommentDto);
+  @UseGuards(AuthGuard)
+  async create(@Body() createLikeCommentDto: CreateLikeCommentDto,@Req() req) {
+    return this.likeCommentService.create(createLikeCommentDto,req);
   }
 
-  @Get()
-  findAll() {
+  @Get('get-likes')
+  async findAll():Promise<LikeComment[]> {
     return this.likeCommentService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.likeCommentService.findOne(+id);
+  @Get('get-by-user/:id')
+  async findByUser(@Param('id') id:number):Promise<LikeComment[]> {
+    return this.likeCommentService.findByUser(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLikeCommentDto: UpdateLikeCommentDto) {
-    return this.likeCommentService.update(+id, updateLikeCommentDto);
+  @Get('get-by-comment/:id')
+  async findByComment(@Param('id') id:number):Promise<LikeComment[]> {
+    return this.likeCommentService.findByComment(+id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.likeCommentService.remove(+id);
+  @Patch('update?')
+  async update(@Query('posts_id') posts_id:number,@Query('user_id') user_id:number, @Body() updateLikeCommentDto: UpdateLikeCommentDto) {
+    return this.likeCommentService.update(+posts_id,+user_id, updateLikeCommentDto);
+  }
+
+  @Delete('delete?')
+  async remove(@Query('posts_id') posts_id:number,@Query('user_id') user_id:number) {
+    return this.likeCommentService.remove(posts_id,user_id);
   }
 }

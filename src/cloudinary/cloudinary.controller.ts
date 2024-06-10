@@ -2,18 +2,42 @@
 import {
     Controller,
     Post,
-    UploadedFile,
+    UploadedFiles,
     UseInterceptors,
 } from '@nestjs/common';
 import { CloudinaryService } from './cloudinary.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 @Controller('image')
 export class CloudinaryController {
     constructor(private readonly cloudinaryService: CloudinaryService) { }
 
-    @Post('upload')
-    @UseInterceptors(FileInterceptor('file'))
-    uploadImage(@UploadedFile() file: Express.Multer.File) {
-        return this.cloudinaryService.uploadFile(file);
+    @Post('uploads')
+    @UseInterceptors(FilesInterceptor('files'))
+    async uploadImages(@UploadedFiles() files: Express.Multer.File[]) {
+        console.log(files);
+        
+        const uploadResults = [];
+        for (const file of files) {
+            const {mimetype} = file
+            console.log(mimetype);
+            
+            try {
+                if(mimetype === 'video/mp4'){
+                    const result = await this.cloudinaryService.uploadVideo(file);
+                    uploadResults.push(result);
+                }else{
+                    const result = await this.cloudinaryService.uploadFile(file);
+                    uploadResults.push(result);
+                }
+
+                
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                // Handle errors appropriately (e.g., return error response)
+            }
+        }
+        return uploadResults;
+
+        // return await this.cloudinaryService.uploadFile(file);
     }
 }
