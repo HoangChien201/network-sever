@@ -11,7 +11,7 @@ export class Media {
     posts_id:number
 
     @Column()
-    type:string
+    resource_type:string
 
     @Column()
     url:string

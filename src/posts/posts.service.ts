@@ -8,11 +8,11 @@ import { User } from 'src/user/entities/user.entity';
 import { LikePost } from 'src/like-posts/entities/like-post.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { TagPost } from 'src/tag-posts/entities/tag-post.entity';
-import { Media } from 'src/media/entities/media.entity';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { Friendship } from 'src/friendship/entities/friendship.entity';
 import { bodyGetByUser } from './posts.controller';
 import { LikeComment } from 'src/like-comment/entities/like-comment.entity';
+import { Media } from 'src/media/entities/media.entity';
 
 
 const PERMISSION_FRIEND=2
@@ -37,7 +37,8 @@ export class PostsService {
   ) { }
 
   private async createPost(createPostDto: CreatePostDto, creater: number) {
-    //gán id người đăng bài viết
+    try {
+      //gán id người đăng bài viết
     createPostDto.creater = creater
 
     const { tags, medias, ...rest } = createPostDto
@@ -47,9 +48,11 @@ export class PostsService {
         message:'Not data'
       }
     }
+    
+    console.log(rest);
     const postsCreate = await this.postsRepository.save(rest);
 
-    //create tags
+    // //create tags
     if (tags) {
       const tagsCreate = tags.map(t => {
         return {
@@ -60,7 +63,7 @@ export class PostsService {
       await this.tagRepository.insert(tagsCreate);
 
     }
-    //create media
+    // //create media
     if (medias) {
       const mediasCreate = medias.map(m => {
         return {
@@ -68,13 +71,23 @@ export class PostsService {
           posts_id: postsCreate.id
         }
       })
-      await this.mediaRepository.insert(mediasCreate);
+      
+      await this.mediaRepository.insert(mediasCreate)
+      
     }
 
+    
     return {
       status:1,
       message:'OKE'
     };
+    } catch (error) {
+      return {
+        status:-1,
+        message:''+error
+      };
+    }
+    
   }
 
   private async sharePost(createPostDto: CreatePostDto, creater: number) {
@@ -708,6 +721,7 @@ export class PostsService {
       .where(`parent = :commentID`,{commentID:comment.id})
       .orWhere(`posts = ${id}`)
       .execute()
+      
 
       await this.mediaRepository.delete({
         posts_id:id

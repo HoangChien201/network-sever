@@ -50,7 +50,7 @@ import { LikeMessage } from './like-message/entities/like-message.entity';
     password: process.env.PASSWORD_DB,
     database: process.env.NAME_DB,
     entities: [User,Friendship,Posts,Comment,LikeComment,LikePost,Message,Media,TagPost,GroupChat,GroupMember,LikeMessage],
-    synchronize: true,
+    synchronize: false,
     autoLoadEntities:true
   }),
   MailerModule.forRoot({
