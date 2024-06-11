@@ -15,8 +15,8 @@ import { LikeComment } from 'src/like-comment/entities/like-comment.entity';
 import { Media } from 'src/media/entities/media.entity';
 
 
-const PERMISSION_FRIEND=2
-const PERMISSION_PRIVATE=1
+const PERMISSION_FRIEND=1
+const PERMISSION_PRIVATE=2
 @Injectable()
 export class PostsService {
   constructor(
@@ -49,7 +49,6 @@ export class PostsService {
       }
     }
     
-    console.log(rest);
     const postsCreate = await this.postsRepository.save(rest);
 
     // //create tags
@@ -118,13 +117,10 @@ export class PostsService {
     }
   }
 
-  async findByUser(request: Request, user_id:number): Promise<Posts[]> {
+  async findByUser(request: Request, user_id:number): Promise<Posts[] | string> {
     //get user from token
     const user_req = request.headers[USER_ID_HEADER_NAME]
-    console.log(parseInt(user_id.toString()) === parseInt(user_req));
 
-
-    
     try {
 
       const postsQuery = await this.postsRepository.
@@ -144,7 +140,7 @@ export class PostsService {
           },{ids:[PERMISSION_PRIVATE,PERMISSION_FRIEND]}
         )
         .leftJoin('p.media', 'media')
-        .addSelect(['media.url', 'media.type'])
+        .addSelect(['media.url', 'media.resource_type'])
 
         .leftJoin('p.creater', 'creater')
         .addSelect(['creater.id', 'creater.fullname', 'creater.avatar'])
@@ -228,7 +224,7 @@ export class PostsService {
 
       return posts
     } catch (error) {
-      return error
+      return ''+error
     }
 
   }
@@ -242,7 +238,7 @@ export class PostsService {
         .select()
         .where('p.id = :id', { id: id })
         .leftJoin('p.media', 'media')
-        .addSelect(['media.url', 'media.type'])
+        .addSelect(['media.url', 'media.resource_type'])
         .leftJoin('p.tags', 'tags')
         .leftJoin('tags.user', 'user')
         .addSelect(['user.fullname', 'tags.user'])
@@ -327,7 +323,7 @@ export class PostsService {
         createQueryBuilder('p')
         .select()
         .leftJoin('p.media', 'media')
-        .addSelect(['media.url', 'media.type'])
+        .addSelect(['media.url', 'media.resource_type'])
         .leftJoin('p.tags', 'tags')
         .leftJoin('tags.user', 'user')
         .addSelect(['user.fullname', 'tags.user'])
@@ -450,7 +446,7 @@ export class PostsService {
         .addSelect(['creater.id','creater.fullname','creater.avatar'])
 
         .leftJoin('p.media', 'media')
-        .addSelect(['media.url', 'media.type'])
+        .addSelect(['media.url', 'media.resource_type'])
 
         .leftJoin('p.tags', 'tags')
         .leftJoin('tags.user', 'user')

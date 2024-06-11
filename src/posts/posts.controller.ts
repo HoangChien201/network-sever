@@ -22,7 +22,7 @@ export class PostsController {
 
   @Get('/get-by-user/:id')
   @UseGuards(AuthGuard)
-  findByUser(@Param('id') id:number,@Req() req:Request):Promise<Posts[]> {
+  findByUser(@Param('id') id:number,@Req() req:Request):Promise<Posts[] | string> {
     return this.postsService.findByUser(req,id);
   }
 
