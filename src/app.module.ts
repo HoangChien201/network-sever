@@ -44,13 +44,13 @@ import { LikeMessage } from './like-message/entities/like-message.entity';
     }),
     TypeOrmModule.forRoot({
     type: 'mysql',
-    host: '127.0.0.1',
-    port: 3306,
-    username: 'root',
-    password: '123456',
-    database: 'networkDB',
+    host: process.env.HOST_DB,
+    port: parseInt(process.env.PORT_DB),
+    username: process.env.USER_DB,
+    password: process.env.PASSWORD_DB,
+    database: process.env.NAME_DB,
     entities: [User,Friendship,Posts,Comment,LikeComment,LikePost,Message,Media,TagPost,GroupChat,GroupMember,LikeMessage],
-    synchronize: false,
+    synchronize: true,
     autoLoadEntities:true
   }),
   MailerModule.forRoot({

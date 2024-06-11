@@ -1,4 +1,5 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { Notification } from "./socket.entity";
 
 @WebSocketGateway({cors:true})
 export class SocketGateWay {
