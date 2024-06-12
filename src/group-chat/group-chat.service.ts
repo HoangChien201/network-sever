@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GroupChat } from './entities/group-chat.entity';
 import { Repository } from 'typeorm';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
+import { Message } from 'src/message/entities/message.entity';
 
 @Injectable()
 export class GroupChatService {
@@ -33,7 +34,9 @@ export class GroupChatService {
       left join networkdb.group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
       .getMany()
 
+    const groupID=[] 
     groups.map(group => {
+      groupID.push(group.id)
       //trả về members không phải là người gửi yêu cầu
       if (group.type === 'single') {
 
@@ -48,6 +51,26 @@ export class GroupChatService {
       }
       return group
     })
+
+    console.log(groupID);
+    
+    const messageLatest= await this.groupRepository
+    .createQueryBuilder('g')
+    .leftJoinAndSelect(
+      (qb)=>
+        qb.subQuery()
+        .select()
+        .from(Message,'m')
+        .orderBy('m.create_at','DESC')
+      ,'m',
+      'm.groupId = g.id'
+    )
+    .select(['m.message','m.create_at','m.senderId','m.type','m.state','g.id'])
+    .where('g.id IN (:...ids)',{ids:groupID})
+    .orderBy('create_at','DESC')
+    .getRawMany()
+    console.log(messageLatest);
+    
 
     return groups;
   }

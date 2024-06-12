@@ -1,14 +1,17 @@
 import { Comment } from "src/comment/entities/comment.entity"
 import { User } from "src/user/entities/user.entity"
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 @Entity()
 export class LikeComment {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
+    id:number
+
+    @Column()
     @ManyToOne(()=>Comment,(comment)=>comment.id)
     comment:number
 
-    @PrimaryColumn()
+    @Column()
     @ManyToOne(()=>User,(user)=>user.id)
     user:number
 

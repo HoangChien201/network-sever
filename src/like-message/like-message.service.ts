@@ -13,13 +13,25 @@ export class LikeMessageService {
     private readonly likeMessageRepository: Repository<LikeMessage>
   ) { }
 
-  async create(createLikeMessageDto: CreateLikeMessageDto, req: Request): Promise<LikeMessage> {
-    const user_req = req.headers[USER_ID_HEADER_NAME]
+  async create(createLikeMessageDto: CreateLikeMessageDto, req: Request): Promise<any> {
+    try {
+      const user_req = req.headers[USER_ID_HEADER_NAME]
 
-    return this.likeMessageRepository.save({
+     await this.likeMessageRepository.save({
       ...createLikeMessageDto,
       user: user_req
     });
+    return {
+      status:1,
+      message:"OK"
+    }
+    } catch (error) {
+      return {
+        status:1,
+        message:"NOT OK - " + error
+      }
+    }
+    
   }
 
   async findByMessage(message_id: number) {

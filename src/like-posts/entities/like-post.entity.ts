@@ -1,14 +1,17 @@
 import { Posts } from "src/posts/entities/posts.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class LikePost {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
+    id:number
+
+    @Column()
     @ManyToOne(()=>Posts,(posts)=>posts.likes)
     posts:number
 
-    @PrimaryColumn()
+    @Column()
     @ManyToOne(()=>User,(user)=>user.likePosts)
     user:number
 

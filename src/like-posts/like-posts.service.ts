@@ -18,6 +18,8 @@ export class LikePostsService {
     const creater = request.headers[USER_ID_HEADER_NAME]
     try {
       createLikePostDto['user'] = creater
+      console.log(createLikePostDto);
+      
       await this.likePostRepository.save(createLikePostDto);
       return {
         status: 1,

@@ -1,14 +1,18 @@
 import { Message } from "src/message/entities/message.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class LikeMessage {
-    @PrimaryColumn()
+
+    @PrimaryGeneratedColumn()
+    id:number
+
+    @Column()
     @ManyToOne(()=>Message,(msg)=>msg.reactions)
     message:number;
 
-    @PrimaryColumn()
+    @Column()
     @ManyToOne(()=>User,(user)=>user.likeMessages)
     user:number;
 

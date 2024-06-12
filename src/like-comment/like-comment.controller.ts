@@ -11,7 +11,7 @@ export class LikeCommentController {
 
   @Post()
   @UseGuards(AuthGuard)
-  async create(@Body() createLikeCommentDto: CreateLikeCommentDto,@Req() req) {
+  async create(@Body() createLikeCommentDto: CreateLikeCommentDto,@Req() req:Request) {
     return this.likeCommentService.create(createLikeCommentDto,req);
   }
 

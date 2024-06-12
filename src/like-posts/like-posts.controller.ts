@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req } from '@nestjs/common';
 import { LikePostsService } from './like-posts.service';
 import { CreateLikePostDto } from './dto/create-like-post.dto';
 import { UpdateLikePostDto } from './dto/update-like-post.dto';
 import { LikePost } from './entities/like-post.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('like-posts')
 export class LikePostsController {
   constructor(private readonly likePostsService: LikePostsService) {}
 
   @Post()
-  async create(@Body() createLikePostDto: CreateLikePostDto,req:Request) {
+  @UseGuards(AuthGuard)
+  async create(@Body() createLikePostDto: CreateLikePostDto,@Req() req:Request) {
     return this.likePostsService.create(createLikePostDto,req);
   }
 

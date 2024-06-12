@@ -1,1 +1,4 @@
-export class CreateLikePostDto {}
+export class CreateLikePostDto {
+    posts:number;
+    reaction:number;
+}
