@@ -28,7 +28,7 @@ export class UserController {
 
   @Get('history-activity')
   @UseGuards(AuthGuard)
-  historyActivity(@Req() req:Request):Promise<User> {
+  historyActivity(@Req() req:Request):Promise<User | any> {
     return this.userService.historyActivitiy(req);
   }
 

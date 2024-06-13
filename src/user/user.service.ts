@@ -60,45 +60,53 @@ export class UserService {
     return userQuery
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
+  async findUserByEmail(email: string): Promise<User | null | any> {
     return await this.userRepository.findOneBy({ email: email });
   }
 
-  async historyActivitiy(request: Request): Promise<User> {
-    //get user from token
-    const user_id = request.headers[USER_ID_HEADER_NAME];
+  async historyActivitiy(request: Request): Promise<User | any> {
+    try {
+      //get user from token
+      const user_id = request.headers[USER_ID_HEADER_NAME];
 
-    const historyLikes = await this.userRepository
-      .createQueryBuilder('u')
-      //joinlikePost
-      .leftJoin('u.likePosts', 'lp')
-      .addSelect(['lp.reaction', 'lp.create_at', 'lp.update_at'])
+      const historyLikes = await this.userRepository
+        .createQueryBuilder('u')
+        //joinlikePost
+        .leftJoin('u.likePosts', 'lp')
+        .addSelect(['lp.reaction', 'lp.create_at', 'lp.update_at'])
 
-      //joinPost
-      .leftJoinAndSelect('lp.posts', 'posts')
-      .leftJoin('posts.creater', 'creater')
-      .addSelect(['creater.fullname', 'creater.id'])
+        //joinPost
+        .leftJoinAndSelect('lp.posts', 'posts')
+        .leftJoin('posts.creater', 'creater')
+        .addSelect(['creater.fullname', 'creater.id'])
 
-      //join like comment
-      .leftJoinAndSelect('u.likeComments', 'lc')
-      .leftJoin('lc.user', 'uLikeC')
-      .addSelect(['uLikeC.fullname', 'uLikeC.id'])
+        //join like comment
+        .leftJoinAndSelect('u.likeComments', 'lc')
+        .leftJoin('lc.user', 'uLikeC')
+        .addSelect(['uLikeC.fullname', 'uLikeC.id'])
 
-      //join comment
-      .leftJoinAndSelect('u.comments', 'comment')
-      .leftJoinAndSelect('comment.posts', 'pComment')
-      .leftJoin('pComment.creater', 'pComment_Creater')
-      .addSelect(['pComment_creater.fullname', 'pComment_creater.id'])
+        //join comment
+        .leftJoinAndSelect('u.comments', 'comment')
+        .leftJoinAndSelect('comment.posts', 'pComment')
+        .leftJoin('pComment.creater', 'pComment_Creater')
+        .addSelect(['pComment_creater.fullname', 'pComment_creater.id'])
 
-      .where({
-        id: user_id
-      })
-      .getOne()
+        .where({
+          id: user_id
+        })
+        .getOne()
 
-    historyLikes.password = undefined
+      historyLikes.password = undefined
 
-    return historyLikes;
+      return historyLikes;
+    } catch (error) {
+      return {
+        status: -1,
+        message: '' + error
+      }
+    }
   }
+
 
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<any> {
@@ -124,7 +132,7 @@ export class UserService {
   }
 
   async remove(id: number): Promise<any> {
-    
+
     try {
       await this.userRepository.delete(id);
 
