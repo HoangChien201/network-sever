@@ -89,7 +89,7 @@ export class UserService {
         .leftJoinAndSelect('u.comments', 'comment')
         .leftJoinAndSelect('comment.posts', 'pComment')
         .leftJoin('pComment.creater', 'pComment_Creater')
-        .addSelect(['pComment_creater.fullname', 'pComment_creater.id'])
+        .addSelect(['pComment_Creater.fullname', 'pComment_creater.id'])
 
         .where({
           id: user_id
