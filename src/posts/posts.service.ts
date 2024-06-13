@@ -435,7 +435,7 @@ export class PostsService {
       const postsQuery = await this.postsRepository.
         createQueryBuilder('p')
         .where({
-          permission: 2,
+          permission: PERMISSION_FRIEND,
           type:1
         })
         .andWhere(
