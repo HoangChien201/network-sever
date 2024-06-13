@@ -436,7 +436,6 @@ export class PostsService {
         createQueryBuilder('p')
         .where({
           permission: PERMISSION_FRIEND,
-          type:1
         })
         .andWhere(
           `p.creater IN (:...ids)`, { ids: [...idfriendOfUsers, user_req] }
@@ -699,7 +698,6 @@ export class PostsService {
 
       //filter id commentchildren
       const commentChildrenID=commentChildren.map(c=>c.id)
-      console.log(commentChildrenID);
       
       if(commentChildrenID.length > 0){
         await this.likeCommentRepository
