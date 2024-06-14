@@ -38,6 +38,25 @@ export class FriendshipController {
     return this.friendshipService.search(keyword,req);
   }
 
+  @Post('/cancle-request')
+  @UseGuards(AuthGuard)
+  async cancleRequest(@Body() body:any,@Req() req:Request) {
+    return this.friendshipService.cancleRequest(body,req);
+  }
+
+  @Post('/reject-request')
+  @UseGuards(AuthGuard)
+  async rejectRequest(@Body() body:any,@Req() req:Request) {
+    return this.friendshipService.rejectRequest(body,req);
+  }
+
+  @Post('/accept-request')
+  @UseGuards(AuthGuard)
+  async accepRequest(@Body() body,@Req() req:Request) {
+    return this.friendshipService.acceptRequest(body,req);
+  }
+
+
   @Delete('un-friendship?')
   unFriendShip(@Body() body:any) {
     return this.friendshipService.unFriendShip(body);

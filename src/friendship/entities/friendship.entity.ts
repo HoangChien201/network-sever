@@ -14,7 +14,7 @@ export class Friendship {
     @ManyToOne(()=>User,(user)=>user.id)
     user2:number
 
-    @PrimaryColumn()
+    @Column()
     status:number
     
     @CreateDateColumn()

@@ -24,7 +24,7 @@ export class FriendshipService {
     try {
       const user_req = request.headers[USER_ID_HEADER_NAME]
       createFriendshipDto["user1"] = parseInt(user_req)
-
+      createFriendshipDto["status"]=1
       return await this.friendShipRepository.save(createFriendshipDto)
     } catch (error) {
       return {
@@ -177,10 +177,23 @@ export class FriendshipService {
   async unFriendShip(body: any) {
     try {
       const { user1, user2 } = body
-      await this.friendShipRepository.delete({
+      await this.friendShipRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Friendship)
+      .where({
         user1: user1,
-        user2: user2
+        user2: user2,
+        status:2
       })
+      .orWhere(
+        {
+          user1: user2,
+          user2: user1,
+          status:2
+        }
+      )
+      .execute()
       return {
         status: 1,
         message: "Cancle Success"
@@ -189,6 +202,76 @@ export class FriendshipService {
       return {
         status: 2,
         message: "Cancle Failed" + error
+      }
+    }
+  }
+
+  async cancleRequest(body:any,request:Request) {
+    const user_req= request.headers[USER_ID_HEADER_NAME]
+    try {
+      const { user2 } = body
+      await this.friendShipRepository.delete({
+        user1: user_req,
+        user2: user2,
+        status:1
+      })
+      return {
+        status: 1,
+        message: "Cancle Success"
+      }
+    } catch (error) {
+      return {
+        status: -1,
+        message: "Cancle Failed-" + error
+      }
+    }
+  }
+
+  async rejectRequest(body:any,request:Request) {
+    const user_req= request.headers[USER_ID_HEADER_NAME]
+    try {
+      const { user1 } = body
+      await this.friendShipRepository.delete({
+        user1: user1,
+        user2: user_req,
+        status:1
+      })
+      return {
+        status: 1,
+        message: "Reject Success"
+      }
+    } catch (error) {
+      return {
+        status: -1,
+        message: "Reject Failed-" + error
+      }
+    }
+  }
+
+  async acceptRequest(body:any,request:Request) {
+    const user_req= request.headers[USER_ID_HEADER_NAME]
+    try {
+      const { user1 } = body
+      const friendship=await this.friendShipRepository.findOne({
+        where:{
+          user1: user1,
+          user2: user_req, 
+        }
+        
+      })
+
+      await this.friendShipRepository.save({
+        ...friendship,
+        status:2
+      })
+      return {
+        status: 1,
+        message: "Reject Success"
+      }
+    } catch (error) {
+      return {
+        status: -1,
+        message: "Reject Failed-" + error
       }
     }
   }
