@@ -24,6 +24,10 @@ export class UserService {
     const passwordHashed = await bcrypt.hash(password, saltOrRounds);
 
     createUserDto.password = passwordHashed
+
+    if(!createUserDto.avatar){
+      createUserDto.avatar='https://res.cloudinary.com/delivery-food/image/upload/v1718218858/fp7kzwqvzxmsjvbynygp.jpg'
+    }
     return await this.userRepository.save(createUserDto);
   }
 

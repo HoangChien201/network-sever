@@ -1,20 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { PasswordService } from './password.service';
 import { PasswordGuard } from './password.gruard';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('password')
 export class PasswordController {
-  constructor(private readonly passwordService: PasswordService) {}
+  constructor(private readonly passwordService: PasswordService) { }
 
   @Post('/send-mail')
-  async sendMailResetPassword(@Body() body:any){
-      return this.passwordService.sendMailResetPassword(body);
+  async sendMailResetPassword(@Body() body: any) {
+    return this.passwordService.sendMailResetPassword(body);
   }
 
   @Post('/verify-code')
   @UseGuards(PasswordGuard)
-  async verifyCode(){
+  async verifyCode() {
     return this.passwordService.verifyCodeResetPassword();
-}
+  }
+
+  @Post('/reset-password')
+  @UseGuards(AuthGuard)
+  async resetPassword(@Body() body:any,@Req() req:Request) {
+    return this.passwordService.resetPassword(body,req);
+  }
 
 }
