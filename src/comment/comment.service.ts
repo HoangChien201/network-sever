@@ -25,7 +25,10 @@ export class CommentService {
         message:"OK"
       }
     } catch (error) {
-      return error
+      return {
+        status:-1,
+        message:"Not OK "+error
+      }
     }
   }
 
