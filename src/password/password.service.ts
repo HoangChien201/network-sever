@@ -61,17 +61,15 @@ export class PasswordService {
     }
   }
 
-  async resetPassword(body: any, req: Request): Promise<any> {
+  async resetPassword(body: any): Promise<any> {
     try {
       
-      let { password } = body
-      const user_req = req.headers[USER_ID_HEADER_NAME]
+      let { password,email } = body
       const saltOrRounds = parseInt(process.env.SALTORROUNDS)
-      console.log(saltOrRounds);
       
       password = await bcrypt.hash(password.toString(), saltOrRounds);
-  
-      await this.userService.update(user_req,{password})
+      const idUser= await this.userService.findUserByEmail(email)
+      await this.userService.update(idUser.id,{password})
       return {
         "message": "Successful Reset",
         "status": 1

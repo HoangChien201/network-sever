@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } fro
 import { PasswordService } from './password.service';
 import { PasswordGuard } from './password.gruard';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { UpdateCommentDto } from 'src/comment/dto/update-comment.dto';
 
 @Controller('password')
 export class PasswordController {
@@ -19,9 +20,8 @@ export class PasswordController {
   }
 
   @Post('/reset-password')
-  @UseGuards(AuthGuard)
-  async resetPassword(@Body() body:any,@Req() req:Request) {
-    return this.passwordService.resetPassword(body,req);
+  async resetPassword(@Body() body:UpdateCommentDto) {
+    return this.passwordService.resetPassword(body);
   }
 
 }
