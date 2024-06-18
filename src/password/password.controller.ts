@@ -24,4 +24,10 @@ export class PasswordController {
     return this.passwordService.resetPassword(body);
   }
 
+  @Post('/change-password')
+  @UseGuards(AuthGuard)
+  async changePassword(@Body() body:UpdateCommentDto,@Req() req:Request) {
+    return this.passwordService.changePassword(body,req);
+  }
+
 }

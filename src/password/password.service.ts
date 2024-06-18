@@ -14,6 +14,8 @@ export class PasswordService {
     private userService: UserService,
     private jwtService: JwtService,
     private readonly mailerService: MailerService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
   ) { }
 
   async sendMailResetPassword(body: any): Promise<any> {
@@ -63,13 +65,13 @@ export class PasswordService {
 
   async resetPassword(body: any): Promise<any> {
     try {
-      
-      let { password,email } = body
+
+      let { password, email } = body
       const saltOrRounds = parseInt(process.env.SALTORROUNDS)
-      
+
       password = await bcrypt.hash(password.toString(), saltOrRounds);
-      const idUser= await this.userService.findUserByEmail(email)
-      await this.userService.update(idUser.id,{password})
+      const idUser = await this.userService.findUserByEmail(email)
+      await this.userService.update(idUser.id, { password })
       return {
         "message": "Successful Reset",
         "status": 1
@@ -80,5 +82,37 @@ export class PasswordService {
         "status": -1
       }
     }
+
   }
+
+  async changePassword(body: any, request: Request): Promise<any> {
+    try {
+      let { passwordOld, passwordNew } = body
+      const user_req = request.headers[USER_ID_HEADER_NAME]
+      const user = await this.userRepository.findOne({ where: { id: user_req } })
+
+      const isMatch = await bcrypt.compare(passwordOld.toString(), user.password);
+
+      if (!isMatch) {
+        return {
+          "message": "Password not match",
+          "status": -2
+        }
+      }
+
+      const saltOrRounds = parseInt(process.env.SALTORROUNDS)
+      const password = await bcrypt.hash(passwordNew.toString(), saltOrRounds);
+      await this.userService.update(user_req, { password })
+      return {
+        "message": "Successful Change",
+        "status": 1
+      }
+    } catch (error) {
+      return {
+        "message": "Failed Change " + error,
+        "status": -1
+      }
+    }
+  }
+
 }
