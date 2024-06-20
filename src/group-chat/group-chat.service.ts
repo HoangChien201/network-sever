@@ -37,7 +37,6 @@ export class GroupChatService {
         .getMany()
 
       const groupID = []
-      if(groups.length < 1) return []
       groups.map(group => {
         groupID.push(group.id)
         //trả về members không phải là người gửi yêu cầu
