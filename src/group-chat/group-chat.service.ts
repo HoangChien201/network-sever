@@ -15,64 +15,69 @@ export class GroupChatService {
   ) { }
 
   async create(createGroupChatDto: CreateGroupChatDto) {
-    if(!createGroupChatDto.image){
-      createGroupChatDto.image="http://res.cloudinary.com/delivery-food/image/upload/v1717925637/oqbqmqtswalnlfrmhayn.png"
+    if (!createGroupChatDto.image) {
+      createGroupChatDto.image = "http://res.cloudinary.com/delivery-food/image/upload/v1717925637/oqbqmqtswalnlfrmhayn.png"
     }
     return await this.groupRepository.save(createGroupChatDto);
   }
 
   async findByUser(req: Request) {
     const user_req = req.headers[USER_ID_HEADER_NAME]
+    try {
 
-    const groups = await this.groupRepository
-      .createQueryBuilder('g')
-      .innerJoin('g.members', 'member')
-      .addSelect('member.user')
-      .innerJoin('member.user', 'user')
-      .addSelect(['user.id', 'user.fullname', 'user.avatar'])
-      .where(`g.id IN (SELECT gc.id FROM networkdb.group_chat gc 
+    } catch (error) {
+      const groups = await this.groupRepository
+        .createQueryBuilder('g')
+        .innerJoin('g.members', 'member')
+        .addSelect('member.user')
+        .innerJoin('member.user', 'user')
+        .addSelect(['user.id', 'user.fullname', 'user.avatar'])
+        .where(`g.id IN (SELECT gc.id FROM networkdb.group_chat gc 
       left join networkdb.group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
-      .getMany()
+        .getMany()
 
-    const groupID=[] 
-    groups.map(group => {
-      groupID.push(group.id)
-      //trả về members không phải là người gửi yêu cầu
-      if (group.type === 'single') {
+      const groupID = []
+      if(groups.length < 1) return []
+      groups.map(group => {
+        groupID.push(group.id)
+        //trả về members không phải là người gửi yêu cầu
+        if (group.type === 'single') {
 
-        const membersFilter = group.members.filter(m => {
-          return m['user']['id'] !== user_req
-        })
+          const membersFilter = group.members.filter(m => {
+            return m['user']['id'] !== user_req
+          })
 
-        group.members = membersFilter;
-        group.image = membersFilter[0].user['avatar']
+          group.members = membersFilter;
+          group.image = membersFilter[0].user['avatar']
 
+          return group
+        }
         return group
-      }
-      return group
-    })
+      })
 
-    console.log(groupID);
-    
-    const messageLatest= await this.groupRepository
-    .createQueryBuilder('g')
-    .leftJoinAndSelect(
-      (qb)=>
-        qb.subQuery()
-        .select()
-        .from(Message,'m')
-        .orderBy('m.create_at','DESC')
-      ,'m',
-      'm.groupId = g.id'
-    )
-    .select(['m.message','m.create_at','m.senderId','m.type','m.state','g.id'])
-    .where('g.id IN (:...ids)',{ids:groupID})
-    .orderBy('create_at','DESC')
-    .getRawMany()
-    console.log(messageLatest);
-    
+      console.log(groupID);
 
-    return groups;
+      const messageLatest = await this.groupRepository
+        .createQueryBuilder('g')
+        .leftJoinAndSelect(
+          (qb) =>
+            qb.subQuery()
+              .select()
+              .from(Message, 'm')
+              .orderBy('m.create_at', 'DESC')
+          , 'm',
+          'm.groupId = g.id'
+        )
+        .select(['m.message', 'm.create_at', 'm.senderId', 'm.type', 'm.state', 'g.id'])
+        .where('g.id IN (:...ids)', { ids: groupID })
+        .orderBy('create_at', 'DESC')
+        .getRawMany()
+      console.log(messageLatest);
+
+
+      return groups;
+    }
+
   }
 
   async update(id: number, updateGroupChatDto: UpdateGroupChatDto) {
@@ -96,7 +101,7 @@ export class GroupChatService {
 
   async remove(id: number) {
     try {
-      await this.groupRepository.delete({id:id})
+      await this.groupRepository.delete({ id: id })
       return {
         status: 1,
         message: "Delete Success"
