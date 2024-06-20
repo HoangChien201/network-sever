@@ -22,22 +22,19 @@ export class GroupChatService {
   }
 
   async findByUser(req: Request) {
-    const user_req = req.headers[USER_ID_HEADER_NAME]
     try {
-
-    } catch (error) {
+      const user_req = req.headers[USER_ID_HEADER_NAME]
       const groups = await this.groupRepository
         .createQueryBuilder('g')
         .innerJoin('g.members', 'member')
         .addSelect('member.user')
         .innerJoin('member.user', 'user')
         .addSelect(['user.id', 'user.fullname', 'user.avatar'])
-        .where(`g.id IN (SELECT gc.id FROM networkdb.group_chat gc 
-      left join networkdb.group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
+        .where(`g.id IN (SELECT gc.id FROM group_chat gc 
+      left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
         .getMany()
 
       const groupID = []
-      if(groups.length < 1) return []
       groups.map(group => {
         groupID.push(group.id)
         //trả về members không phải là người gửi yêu cầu
@@ -76,6 +73,11 @@ export class GroupChatService {
 
 
       return groups;
+    } catch (error) {
+      return {
+        status:-1,
+        message:'Failed '+error
+      }
     }
 
   }
