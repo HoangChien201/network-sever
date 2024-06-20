@@ -16,7 +16,7 @@ export class GroupChatController {
 
   @Get('/get-by-user')
   @UseGuards(AuthGuard)
-  async findByUser(@Req() req:Request):Promise<GroupChat[]> {
+  async findByUser(@Req() req:Request):Promise<any> {
     return this.groupChatService.findByUser(req);
   }
 
