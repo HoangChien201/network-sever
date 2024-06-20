@@ -32,8 +32,8 @@ export class GroupChatService {
         .addSelect('member.user')
         .innerJoin('member.user', 'user')
         .addSelect(['user.id', 'user.fullname', 'user.avatar'])
-        .where(`g.id IN (SELECT gc.id FROM networkdb.group_chat gc 
-      left join networkdb.group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
+        .where(`g.id IN (SELECT gc.id FROM network-social.group_chat gc 
+      left join network-social.group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
         .getMany()
 
       const groupID = []
