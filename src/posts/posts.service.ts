@@ -242,6 +242,8 @@ export class PostsService {
         .leftJoin('p.tags', 'tags')
         .leftJoin('tags.user', 'user')
         .addSelect(['user.fullname', 'tags.user'])
+        .leftJoin('p.creater', 'creater')
+        .addSelect(['creater.id', 'creater.fullname', 'creater.avatar'])
         .getOne()
 
 

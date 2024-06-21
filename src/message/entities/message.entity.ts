@@ -5,7 +5,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, 
 
 @Entity()
 export class Message {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id:number
 
     @ManyToOne(()=>User,(user)=>user.id)

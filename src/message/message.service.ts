@@ -14,8 +14,17 @@ export class MessageService {
     private readonly messageReposity: Repository<Message>
   ) { }
 
-  async create(createMessageDto: CreateMessageDto): Promise<Message> {
-    return await this.messageReposity.save(createMessageDto);
+  async create(createMessageDto: CreateMessageDto): Promise<any> {
+    try {
+      return await this.messageReposity.save(createMessageDto);
+
+    } catch (error) {
+      return {
+        status: -1,
+        message: "falied " + error
+      };
+
+    }
   }
 
   async findByGroup(group_id: number): Promise<Message[]> {
@@ -23,12 +32,12 @@ export class MessageService {
       .createQueryBuilder('m')
       .leftJoin('m.sender', 'sender')
       .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
-      .leftJoin('m.reactions','reactions')
+      .leftJoin('m.reactions', 'reactions')
       .addSelect('reactions.reaction')
       .where({
         group: group_id
       })
-      .orderBy('m.create_at','DESC')
+      .orderBy('m.create_at', 'DESC')
       .getMany()
 
     return messages;
