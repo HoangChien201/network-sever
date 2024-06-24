@@ -683,9 +683,9 @@ export class PostsService {
 
   async remove(id: number) {
     try {
-      // await this.likePostRepository.delete({
-      //   posts:id
-      // })
+      await this.likePostRepository.delete({
+        posts:id
+      })
 
       const comment = await this.commentRepository.findOne({
         where:{
@@ -693,31 +693,32 @@ export class PostsService {
         }
       })
 
-      let commentChildren = await this.commentRepository
-      .createQueryBuilder('c')
-      .where(`c.parent = ${comment.id}`)
-      .getMany()
+      if(comment){
 
-      //filter id commentchildren
-      const commentChildrenID=commentChildren.map(c=>c.id)
-      
-      if(commentChildrenID.length > 0){
-        await this.likeCommentRepository
+        let commentChildren = await this.commentRepository
+        .createQueryBuilder('c')
+        .where(`c.parent = ${comment.id}`)
+        .getMany()
+  
+        //filter id commentchildren
+        const commentChildrenID=commentChildren.map(c=>c.id)
+        
+        if(commentChildrenID.length > 0){
+          await this.likeCommentRepository
+          .createQueryBuilder()
+          .delete()
+          .from(LikeComment)
+          .where(`comment = ${comment.id} OR comment IN (:...comment_ids)`,{comment_ids:commentChildrenID})
+          .execute()      
+        }
+        await this.commentRepository
         .createQueryBuilder()
         .delete()
-        .from(LikeComment)
-        .where(`comment = ${comment.id} OR comment IN (:...comment_ids)`,{comment_ids:commentChildrenID})
-        .execute()      
+        .from(Comment)
+        .where(`parent = :commentID`,{commentID:comment.id})
+        .orWhere(`posts = ${id}`)
+        .execute()
       }
-
-      await this.commentRepository
-      .createQueryBuilder()
-      .delete()
-      .from(Comment)
-      .where(`parent = :commentID`,{commentID:comment.id})
-      .orWhere(`posts = ${id}`)
-      .execute()
-      
 
       await this.mediaRepository.delete({
         posts_id:id
