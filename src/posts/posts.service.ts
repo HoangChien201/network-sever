@@ -687,17 +687,18 @@ export class PostsService {
         posts:id
       })
 
-      const comment = await this.commentRepository.findOne({
+      const comments = await this.commentRepository.find({
         where:{
           posts:id
         }
       })
 
-      if(comment){
+      if(comments.length>0){
+        const commentsID=comments.map(c=>c.id)
 
         let commentChildren = await this.commentRepository
         .createQueryBuilder('c')
-        .where(`c.parent = ${comment.id}`)
+        .where(`c.parent IN (:...comment_ids)`,{comment_ids:commentsID})
         .getMany()
   
         //filter id commentchildren
@@ -708,15 +709,14 @@ export class PostsService {
           .createQueryBuilder()
           .delete()
           .from(LikeComment)
-          .where(`comment = ${comment.id} OR comment IN (:...comment_ids)`,{comment_ids:commentChildrenID})
+          .where(`comment IN (:...comment_ids)`,{comment_ids:[...commentChildrenID,...commentsID]})
           .execute()      
         }
         await this.commentRepository
         .createQueryBuilder()
         .delete()
         .from(Comment)
-        .where(`parent = :commentID`,{commentID:comment.id})
-        .orWhere(`posts = ${id}`)
+        .where(`posts = ${id}`)
         .execute()
       }
 
