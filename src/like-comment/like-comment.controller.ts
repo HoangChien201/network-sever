@@ -31,12 +31,12 @@ export class LikeCommentController {
   }
 
   @Patch('update?')
-  async update(@Query('posts_id') posts_id:number,@Query('user_id') user_id:number, @Body() updateLikeCommentDto: UpdateLikeCommentDto) {
-    return this.likeCommentService.update(+posts_id,+user_id, updateLikeCommentDto);
+  async update(@Query('comment_id') comment_id:number,@Query('user_id') user_id:number, @Body() updateLikeCommentDto: UpdateLikeCommentDto) {
+    return this.likeCommentService.update(+comment_id,+user_id, updateLikeCommentDto);
   }
 
   @Delete('delete?')
-  async remove(@Query('posts_id') posts_id:number,@Query('user_id') user_id:number) {
-    return this.likeCommentService.remove(posts_id,user_id);
+  async remove(@Query('comment_id') comment_id:number,@Query('user_id') user_id:number) {
+    return this.likeCommentService.remove(comment_id,user_id);
   }
 }

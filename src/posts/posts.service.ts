@@ -3,7 +3,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Posts } from './entities/posts.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { LikePost } from 'src/like-posts/entities/like-post.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
@@ -17,6 +17,7 @@ import { Media } from 'src/media/entities/media.entity';
 
 const PERMISSION_FRIEND=1
 const PERMISSION_PRIVATE=2
+const PERMISSION_DELETE=3
 @Injectable()
 export class PostsService {
   constructor(
@@ -132,12 +133,12 @@ export class PostsService {
         .andWhere(
           ()=>{
             if(parseInt(user_id.toString()) === parseInt(user_req)){
-              return `p.permission IN (:...ids)`
+              return `p.permission IN (:...permissions)`
             }
             else{
               return `p.permission = ${PERMISSION_FRIEND}`
             }
-          },{ids:[PERMISSION_PRIVATE,PERMISSION_FRIEND]}
+          },{permissions:[PERMISSION_PRIVATE,PERMISSION_FRIEND]}
         )
         .leftJoin('p.media', 'media')
         .addSelect(['media.url', 'media.resource_type'])
@@ -237,6 +238,11 @@ export class PostsService {
         createQueryBuilder('p')
         .select()
         .where('p.id = :id', { id: id })
+        .andWhere(
+          {
+            permission : Not(PERMISSION_DELETE) 
+          }
+        )
         .leftJoin('p.media', 'media')
         .addSelect(['media.url', 'media.resource_type'])
         .leftJoin('p.tags', 'tags')
@@ -683,51 +689,55 @@ export class PostsService {
 
   async remove(id: number) {
     try {
-      await this.likePostRepository.delete({
-        posts:id
-      })
+      // await this.likePostRepository.delete({
+      //   posts:id
+      // })
 
-      const comments = await this.commentRepository.find({
-        where:{
-          posts:id
-        }
-      })
+      // const comments = await this.commentRepository.find({
+      //   where:{
+      //     posts:id
+      //   }
+      // })
 
-      if(comments.length>0){
-        const commentsID=comments.map(c=>c.id)
+      // if(comments.length>0){
+      //   const commentsID=comments.map(c=>c.id)
 
-        let commentChildren = await this.commentRepository
-        .createQueryBuilder('c')
-        .where(`c.parent IN (:...comment_ids)`,{comment_ids:commentsID})
-        .getMany()
+      //   let commentChildren = await this.commentRepository
+      //   .createQueryBuilder('c')
+      //   .where(`c.parent IN (:...comment_ids)`,{comment_ids:commentsID})
+      //   .getMany()
   
-        //filter id commentchildren
-        const commentChildrenID=commentChildren.map(c=>c.id)
+      //   //filter id commentchildren
+      //   const commentChildrenID=commentChildren.map(c=>c.id)
         
-        if(commentChildrenID.length > 0){
-          await this.likeCommentRepository
-          .createQueryBuilder()
-          .delete()
-          .from(LikeComment)
-          .where(`comment IN (:...comment_ids)`,{comment_ids:[...commentChildrenID,...commentsID]})
-          .execute()      
-        }
-        await this.commentRepository
-        .createQueryBuilder()
-        .delete()
-        .from(Comment)
-        .where(`posts = ${id}`)
-        .execute()
-      }
+      //   if(commentChildrenID.length > 0){
+      //     await this.likeCommentRepository
+      //     .createQueryBuilder()
+      //     .delete()
+      //     .from(LikeComment)
+      //     .where(`comment IN (:...comment_ids)`,{comment_ids:[...commentChildrenID,...commentsID]})
+      //     .execute()      
+      //   }
+      //   await this.commentRepository
+      //   .createQueryBuilder()
+      //   .delete()
+      //   .from(Comment)
+      //   .where(`posts = ${id}`)
+      //   .execute()
+      // }
 
-      await this.mediaRepository.delete({
-        posts_id:id
-      })
-      await this.tagRepository.delete({
-        posts_id:id
-      })
-      await this.postsRepository.delete({ id: id })
+      // await this.mediaRepository.delete({
+      //   posts_id:id
+      // })
+      // await this.tagRepository.delete({
+      //   posts_id:id
+      // })
 
+      const posts=await this.postsRepository.findOne({ where:{id:id} })
+      await this.postsRepository.save({
+        ...posts,
+        permission:PERMISSION_DELETE
+      })
       return {
         status:1,
         message:'OK'
