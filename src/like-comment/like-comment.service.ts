@@ -12,14 +12,28 @@ import { Exception } from 'handlebars';
 export class LikeCommentService {
   constructor(
     @InjectRepository(LikeComment)
-    private readonly likePostRepository: Repository<LikeComment>
+    private readonly likeCommentRepository: Repository<LikeComment>
   ) { }
 
   async create(createLikeCommentDto: CreateLikeCommentDto, req: Request) {
     const creater = req.headers[USER_ID_HEADER_NAME]
+    const {comment,reaction}=createLikeCommentDto
     createLikeCommentDto['user'] = creater
     try {
-      await this.likePostRepository.save(createLikeCommentDto);
+      const likeComment= await this.likeCommentRepository.findOne({
+        where:{
+          comment:comment,
+          reaction:reaction
+        }
+      })
+
+      if(likeComment){
+        return {
+          status: -1,
+          message: "Like is exist"
+        }
+      }
+      await this.likeCommentRepository.save(createLikeCommentDto);
       return {
         status: 1,
         message: "OK"
@@ -34,7 +48,7 @@ export class LikeCommentService {
   }
 
   async findAll(): Promise<LikeComment[]> {
-    return await this.likePostRepository
+    return await this.likeCommentRepository
       .createQueryBuilder('l')
       .leftJoinAndSelect('l.user_id', 'user')
       .leftJoinAndSelect('l.comment_id', 'comment')
@@ -43,7 +57,7 @@ export class LikeCommentService {
   }
 
   async findByUser(user_id: number): Promise<LikeComment[]> {
-    return await this.likePostRepository
+    return await this.likeCommentRepository
       .createQueryBuilder('l')
       .leftJoinAndSelect('l.user_id', 'user')
       .leftJoinAndSelect('l.commen_id', 'comment')
@@ -55,7 +69,7 @@ export class LikeCommentService {
   }
 
   async findByComment(comment_id: number): Promise<LikeComment[]> {
-    return await this.likePostRepository
+    return await this.likeCommentRepository
       .createQueryBuilder('l')
       .leftJoin('l.user', 'user')
       .addSelect(['user.fullname', 'user.id', 'user.avatar'])
@@ -74,13 +88,13 @@ export class LikeCommentService {
       throw Exception
     }
 
-    const likeOld = await this.likePostRepository.findOne({
+    const likeOld = await this.likeCommentRepository.findOne({
       where: {
         user: user_id,
         comment: comment_id
       }
     })
-    const likeUpdate = await this.likePostRepository.save({
+    const likeUpdate = await this.likeCommentRepository.save({
       ...likeOld,
       ...updateLikeCommentDto
     })
@@ -92,7 +106,7 @@ export class LikeCommentService {
       if (!comment_id || !user_id) {
         throw Exception
       }
-      await this.likePostRepository.delete({
+      await this.likeCommentRepository.delete({
         comment: comment_id,
         user: user_id
       })
