@@ -86,6 +86,7 @@ export class CommentService {
         .where(
           'c.posts =:posts_id',{posts_id:posts_id}
         )
+        .andWhere({parent:IsNull()})
         .orderBy('c.create_at', 'DESC')
         .getRawMany();
 
@@ -103,7 +104,7 @@ export class CommentService {
   async findByCommentParent(comment_id: number,request:Request): Promise<Comment[]> {
     //get user_id from token
     const userRequest= request.headers[USER_ID_HEADER_NAME]
-    
+
     const commentQuery= await this.commnentRepository
       .createQueryBuilder('c')
       .leftJoin('c.user', 'user')
@@ -209,4 +210,7 @@ export class CommentService {
     }
 
   }
+
+
+
 }

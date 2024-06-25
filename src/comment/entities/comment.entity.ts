@@ -6,29 +6,29 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 @Entity()
 export class Comment {
     @PrimaryGeneratedColumn()
-    id:number
+    id: number
 
-    @ManyToOne(()=>Posts,(posts)=>posts.id)
-    posts:number;
+    @ManyToOne(() => Posts, (posts) => posts.id)
+    posts: number;
 
-    @ManyToOne(()=>User,(user)=>user.id)
-    user:number ;
+    @ManyToOne(() => User, (user) => user.id)
+    user: number;
 
-    @ManyToOne(()=>Comment,(comment)=>comment.id)
-    parent:number | Comment;
+    @ManyToOne(() => Comment, (comment) => comment.id)
+    parent: number | Comment;
 
-    @OneToMany(()=>LikeComment,(likeComment)=>likeComment.comment)
-    likeComment:number | LikeComment[];
+    @OneToMany(() => LikeComment, (likeComment) => likeComment.comment)
+    likeComment: number | LikeComment[];
 
     @Column()
-    content:string
+    content: string
 
-    @Column({nullable:true})
-    image:string
+    @Column({ nullable: true })
+    image: string
 
     @CreateDateColumn()
-    create_at:Date
+    create_at: Date
 
     @UpdateDateColumn()
-    update_at:Date
+    update_at: Date
 }

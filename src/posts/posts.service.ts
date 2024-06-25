@@ -17,7 +17,7 @@ import { Media } from 'src/media/entities/media.entity';
 
 const PERMISSION_FRIEND=1
 const PERMISSION_PRIVATE=2
-const PERMISSION_DELETE=3
+const PERMISSION_DELETE=4
 @Injectable()
 export class PostsService {
   constructor(
@@ -91,16 +91,16 @@ export class PostsService {
   }
 
   private async sharePost(createPostDto: CreatePostDto, creater: number) {
-    const posts_id = createPostDto['id']
+    const posts_share = createPostDto['share']
     console.log('share');
 
     //gán id người đăng bài viết
     createPostDto.creater = creater
-    createPostDto['share'] = posts_id
+    createPostDto['share'] = posts_share
     const { id, ...rest } = createPostDto
     console.log('rest', rest);
 
-    if (!posts_id) return "Không tìm thấy id bài posts"
+    if (!posts_share) return "Không tìm thấy id bài posts cần share"
 
     await this.postsRepository.save(rest)
     return "Share thành công"
@@ -110,7 +110,7 @@ export class PostsService {
     try {
       const creater = request.headers[USER_ID_HEADER_NAME]
 
-      if (createPostDto['id']) return this.sharePost(createPostDto, creater)
+      if (createPostDto['share']) return this.sharePost(createPostDto, creater)
 
       return this.createPost(createPostDto, creater)
     } catch (error) {
@@ -140,6 +140,10 @@ export class PostsService {
             }
           },{permissions:[PERMISSION_PRIVATE,PERMISSION_FRIEND]}
         )
+
+        .leftJoin('p.share', 'share')
+        .addSelect(['share.id'])
+
         .leftJoin('p.media', 'media')
         .addSelect(['media.url', 'media.resource_type'])
 
@@ -154,6 +158,8 @@ export class PostsService {
         .orderBy('p.create_at', 'DESC')
         .getMany()
 
+        if(postsQuery.length <=0) return []
+        const filterPostsIDs=postsQuery.map(p=>p.id)
         
 
       const reactionPosts = await this.postsRepository.createQueryBuilder('p')
@@ -212,9 +218,10 @@ export class PostsService {
           'l.like_count',
           'u.reaction',
         ])
-        .where(`p.creater=${user_id}`)
+        .where(`p.id IN (:...ids)`,{ids:filterPostsIDs})
         .orderBy('p.create_at', 'DESC')
         .getRawMany();
+
       // Convert raws to our appropriate objects 
       const posts = postsQuery.map((v, i) => {
         return {
@@ -309,6 +316,7 @@ export class PostsService {
           'u.reaction',
         ])
         .where(`p.id=${id}`)
+        .andWhere({permission: Not(PERMISSION_DELETE) })
         .getRawOne();
 
       // Convert raws to our appropriate objects 
@@ -549,6 +557,9 @@ export class PostsService {
       .leftJoin('p.creater', 'creater')
       .addSelect(['creater.fullname', 'creater.id', 'creater.avatar'])
       .where('p.share=:posts_id', { posts_id: posts_id })
+      .andWhere({
+        permission: Not (PERMISSION_DELETE)
+      })
       .getMany()
 
 
@@ -607,6 +618,10 @@ export class PostsService {
         'l.like_count',
         'u.reaction',
       ])
+      .where('p.share=:posts_id', { posts_id: posts_id })
+      .andWhere({
+        permission: Not (PERMISSION_DELETE)
+      })
       .orderBy('p.create_at', 'DESC')
       .getRawMany();
 
