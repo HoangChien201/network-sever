@@ -1,4 +1,17 @@
+import { Message } from "src/message/entities/message.entity";
+
 export class Notification {
-    to:number;
-    content:string;
+    body: string;
+    title: string;
+    category: string;
+    userInfo: { 
+        sender:number,
+        receiver:number
+    };
+    fireDate: Date;
+}
+
+export class MessageSocket {
+    group:number;
+    message:Message
 }
