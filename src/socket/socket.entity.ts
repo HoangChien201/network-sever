@@ -10,8 +10,3 @@ export class Notification {
     };
     fireDate: Date;
 }
-
-export class MessageSocket {
-    group:number;
-    message:Message
-}
