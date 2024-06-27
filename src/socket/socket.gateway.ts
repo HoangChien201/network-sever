@@ -1,5 +1,5 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { MessageSocket, Notification } from "./socket.entity";
+import { Notification } from "./socket.entity";
 import { Repository } from "typeorm";
 import { GroupMember } from "src/group-member/entities/group-member.entity";
 import { InjectRepository } from "@nestjs/typeorm";
