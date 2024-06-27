@@ -23,7 +23,7 @@ export class SocketGateWay {
         if (!memberOfGroupIDs) return
 
         memberOfGroupIDs.forEach((member) => {
-            this.sever.emit(`message-${member}`, messageSK.message)
+            this.sever.emit(`message-${member}`, messageSK)
         })
 
     }
