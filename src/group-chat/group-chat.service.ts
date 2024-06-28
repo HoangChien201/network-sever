@@ -44,8 +44,6 @@ export class GroupChatService {
       left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
         .getMany()
 
-
-
       return groups;
     } catch (error) {
       return {
