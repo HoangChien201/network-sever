@@ -1,5 +1,5 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { MessageSocket, Notification } from "./socket.entity";
+import { Notification } from "./socket.entity";
 import { Repository } from "typeorm";
 import { GroupMember } from "src/group-member/entities/group-member.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -17,10 +17,11 @@ export class SocketGateWay {
     @SubscribeMessage('message')
     async handleEvent(@MessageBody() messageSK: Message): Promise<void> {
         const memberOfGroup = await this.groupMemberRepository.find({ where: { group: typeof messageSK.group === 'number'? messageSK.group : messageSK.group.id} })
-
+        
+        
         if (!memberOfGroup) return
-
-        const memberOfGroupIDs = memberOfGroup.map(m => m.group).filter(id=>id !== messageSK.sender)
+        
+        const memberOfGroupIDs = memberOfGroup.map(m => m.user).filter(id=>id !== messageSK.sender)
         if (!memberOfGroupIDs) return
 
         memberOfGroupIDs.forEach((member) => {

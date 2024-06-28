@@ -28,55 +28,29 @@ export class GroupChatService {
         .createQueryBuilder('g')
         .innerJoin('g.members', 'member')
         .addSelect('member.user')
+       
+        //member
         .innerJoin('member.user', 'user')
         .addSelect(['user.id', 'user.fullname', 'user.avatar'])
+
+        //message
+        .innerJoinAndSelect('g.messages', 'm')
+        .leftJoin('m.sender', 'sender')
+        .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
+        .leftJoin('m.reactions', 'reactions')
+        .addSelect('reactions.reaction')
+
         .where(`g.id IN (SELECT gc.id FROM group_chat gc 
       left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
         .getMany()
 
-      const groupID = []
-      groups.map(group => {
-        groupID.push(group.id)
-        //trả về members không phải là người gửi yêu cầu
-        if (group.type === 'single') {
-
-          const membersFilter = group.members.filter(m => {
-            return m['user']['id'] !== user_req
-          })
-
-          group.members = membersFilter;
-          group.image = membersFilter[0].user['avatar']
-
-          return group
-        }
-        return group
-      })
-
-      console.log(groupID);
-
-      const messageLatest = await this.groupRepository
-        .createQueryBuilder('g')
-        .leftJoinAndSelect(
-          (qb) =>
-            qb.subQuery()
-              .select()
-              .from(Message, 'm')
-              .orderBy('m.create_at', 'DESC')
-          , 'm',
-          'm.groupId = g.id'
-        )
-        .select(['m.message', 'm.create_at', 'm.senderId', 'm.type', 'm.state', 'g.id'])
-        .where('g.id IN (:...ids)', { ids: groupID })
-        .orderBy('create_at', 'DESC')
-        .getRawMany()
-      console.log(messageLatest);
 
 
       return groups;
     } catch (error) {
       return {
-        status:-1,
-        message:'Failed '+error
+        status: -1,
+        message: 'Failed ' + error
       }
     }
 
