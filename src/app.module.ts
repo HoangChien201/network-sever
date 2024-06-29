@@ -34,6 +34,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { PasswordModule } from './password/password.module';
 import { LikeMessageModule } from './like-message/like-message.module';
 import { LikeMessage } from './like-message/entities/like-message.entity';
+import { MessageReadModule } from './message-read/message-read.module';
 
 @Module({
   
@@ -92,7 +93,8 @@ import { LikeMessage } from './like-message/entities/like-message.entity';
   TagPostsModule,
   SocketModule,
   PasswordModule,
-  LikeMessageModule
+  LikeMessageModule,
+  MessageReadModule
 ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,6 +4,7 @@ import { GroupMember } from "src/group-member/entities/group-member.entity";
 import { LikeComment } from "src/like-comment/entities/like-comment.entity";
 import { LikeMessage } from "src/like-message/entities/like-message.entity";
 import { LikePost } from "src/like-posts/entities/like-post.entity";
+import { MessageRead } from "src/message-read/entities/message-read.entity";
 import { Message } from "src/message/entities/message.entity";
 import { Posts } from "src/posts/entities/posts.entity";
 import { TagPost } from "src/tag-posts/entities/tag-post.entity";
@@ -78,5 +79,8 @@ export class User {
 
     @OneToMany(()=> Friendship,(f)=>f.user2)
     friend2:number
+
+    @OneToMany(()=>MessageRead,(m)=>m.user)
+    reads:MessageRead[]
 
 }

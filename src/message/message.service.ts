@@ -34,6 +34,11 @@ export class MessageService {
       .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
       .leftJoin('m.reactions', 'reactions')
       .addSelect('reactions.reaction')
+
+      .leftJoinAndSelect('m.reads', 'read')
+      .leftJoin('read.user','user')
+      .addSelect(['user.avatar','user.fullname','user.id'])
+
       .where({
         group: group_id
       })

@@ -1,5 +1,6 @@
 import { GroupChat } from "src/group-chat/entities/group-chat.entity";
 import { LikeMessage } from "src/like-message/entities/like-message.entity";
+import { MessageRead } from "src/message-read/entities/message-read.entity";
 import { User } from "src/user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -13,6 +14,9 @@ export class Message {
 
     @ManyToOne(()=>GroupChat,(group)=>group.id)
     group:number | GroupChat
+
+    @OneToMany(()=>MessageRead,(m)=>m.message)
+    reads:MessageRead[]
 
     @CreateDateColumn()
     create_at:Date
