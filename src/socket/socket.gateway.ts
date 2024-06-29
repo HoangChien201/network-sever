@@ -26,7 +26,13 @@ export class SocketGateWay {
 
         if (!memberOfGroup) return
 
-        const memberOfGroupIDs = memberOfGroup.map(m => m.user).filter(id => id !== messageSK.sender)
+        const memberOfGroupIDs = memberOfGroup.map(m => m.user).filter((id) => 
+            {
+                const sender = typeof messageSK.sender === 'object' ? messageSK.sender.id : messageSK.sender
+                
+                return id !== sender
+            }
+        )
         if (!memberOfGroupIDs) return
 
         memberOfGroupIDs.forEach((member) => {
