@@ -39,6 +39,7 @@ export class GroupChatService {
         .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
         .leftJoin('m.reactions', 'reactions')
         .addSelect('reactions.reaction')
+        .orderBy('m.create_at','DESC')
 
         .where(`g.id IN (SELECT gc.id FROM group_chat gc 
       left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
