@@ -6,7 +6,8 @@ export class Notification {
     category: string;
     userInfo: { 
         sender:number,
-        receiver:number
+        receiver:number,
+        multiple:boolean
     };
     fireDate: Date;
 }
