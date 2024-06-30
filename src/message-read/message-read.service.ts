@@ -22,7 +22,11 @@ export class MessageReadService {
   }
 
   async findAll() {
-    return await this.messageReadRepository.find();
+    try {
+      return await this.messageReadRepository.find();
+    } catch (error) {
+      return ''+error
+    }
   }
-
+  
 }
