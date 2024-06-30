@@ -28,7 +28,7 @@ export class GroupChatService {
         .createQueryBuilder('g')
         .innerJoin('g.members', 'member')
         .addSelect('member.user')
-       
+
         //member
         .innerJoin('member.user', 'user')
         .addSelect(['user.id', 'user.fullname', 'user.avatar'])
@@ -39,7 +39,12 @@ export class GroupChatService {
         .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
         .leftJoin('m.reactions', 'reactions')
         .addSelect('reactions.reaction')
-        .orderBy('m.create_at','DESC')
+        .orderBy('m.create_at', 'DESC')
+
+        //người đã đọc tin nhắn
+        .leftJoinAndSelect('m.reads', 'read')
+        .leftJoin('read.user', 'user')
+        .addSelect(['user.avatar', 'user.fullname', 'user.id'])
 
         .where(`g.id IN (SELECT gc.id FROM group_chat gc 
       left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
