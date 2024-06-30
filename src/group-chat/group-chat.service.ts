@@ -41,8 +41,8 @@ export class GroupChatService {
         .addSelect('reactions.reaction')
         //người đã đọc tin nhắn
         .leftJoinAndSelect('m.reads', 'read')
-        .leftJoin('read.user', 'user')
-        .addSelect(['user.avatar', 'user.fullname', 'user.id'])
+        .leftJoin('read.user', 'user-read')
+        .addSelect(['user-read.avatar', 'user-read.fullname', 'user-read.id'])
         .orderBy('m.create_at', 'DESC')
 
         
