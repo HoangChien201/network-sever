@@ -8,5 +8,7 @@ import { LikeMessage } from './entities/like-message.entity';
   imports:[TypeOrmModule.forFeature([LikeMessage])],
   controllers: [LikeMessageController],
   providers: [LikeMessageService],
+  exports:[LikeMessageService]
+
 })
 export class LikeMessageModule {}

@@ -8,5 +8,6 @@ import { MessageRead } from './entities/message-read.entity';
   imports:[TypeOrmModule.forFeature([MessageRead])],
   controllers: [MessageReadController],
   providers: [MessageReadService],
+  exports:[MessageReadService]
 })
 export class MessageReadModule {}

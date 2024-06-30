@@ -20,7 +20,7 @@ export class PasswordService {
 
   async sendMailResetPassword(body: any): Promise<any> {
 
-    const code = Math.floor(Math.random() * 100000)
+    const code = Math.floor(Math.random() * (99999-10000)) + 10000
     const token = await this.jwtService.signAsync({ code: code })
     this.mailerService
       .sendMail({

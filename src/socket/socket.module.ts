@@ -2,12 +2,20 @@ import { Module } from '@nestjs/common';
 import {SocketGateWay } from './socket.gateway';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupMember } from 'src/group-member/entities/group-member.entity';
-import { Message } from 'src/message/entities/message.entity';
 import { Friendship } from 'src/friendship/entities/friendship.entity';
+import { MessageReadModule } from 'src/message-read/message-read.module';
+import { LikeMessageModule } from 'src/like-message/like-message.module';
+import { MessageReadService } from 'src/message-read/message-read.service';
+import { Message } from 'src/message/entities/message.entity';
+import { MessageRead } from 'src/message-read/entities/message-read.entity';
 
 
 @Module({
-  imports:[TypeOrmModule.forFeature([GroupMember,Friendship])],
+  imports:[
+    TypeOrmModule.forFeature([GroupMember,Friendship,Message,MessageRead]),
+    MessageReadModule,
+    LikeMessageModule,
+],
   providers: [SocketGateWay],
 
 })
