@@ -33,7 +33,7 @@ export class MessageService {
       .leftJoin('m.sender', 'sender')
       .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
       .leftJoin('m.reactions', 'reactions')
-      .addSelect('reactions.reaction')
+      .addSelect(['reactions.reaction','reactions.id','reactions.user'])
 
       .leftJoinAndSelect('m.reads', 'read')
       .leftJoin('read.user','user')

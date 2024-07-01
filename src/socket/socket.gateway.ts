@@ -24,6 +24,7 @@ type MessageReadType = {
     user: number
 }
 
+
 @WebSocketGateway({ cors: true })
 export class SocketGateWay {
     constructor(
@@ -35,8 +36,8 @@ export class SocketGateWay {
         private readonly messageRepository: Repository<Message>,
         @InjectRepository(MessageRead)
         private readonly messageReadRepository: Repository<MessageRead>,
-        private likeMessageService: LikeMessageService,
-
+        @InjectRepository(LikeMessage)
+        private readonly likeMessageRepository: Repository<LikeMessage>,
 
     ) { }
 
@@ -74,8 +75,8 @@ export class SocketGateWay {
             .createQueryBuilder('m')
             .where({
                 group: messageRead.group,
-                state:STATUS_SEND
-                
+                state: STATUS_SEND
+
             })
             .andWhere(`not m.sender=${messageRead.user}`)
             .andWhere(`
@@ -103,15 +104,39 @@ export class SocketGateWay {
 
     //xử lý reaction tin nhắn
     @SubscribeMessage('reaction-message')
-    @UseGuards(AuthGuard)
-    async handleReactionMessage(@MessageBody() reaction: LikeMessage, @Req() req: Request): Promise<void> {
-        const reactionCreate = await this.likeMessageService.create({
-            message: reaction.message,
-            reaction: reaction.reaction
-        }, req)
-        console.log('reaction', reactionCreate);
+    async handleReactionMessage(@MessageBody() data: LikeMessage): Promise<void> {
+        console.log('data', data);
+        const reaction: LikeMessage = data[0]
+        const status = data[1]
 
-        await this.sever.emit(`reaction-message-${reaction.message}`, reactionCreate)
+        switch (status) {
+            case 1: {
+                //create
+                const reactionCreate = await this.likeMessageRepository.save({
+                    message: reaction.message,
+                    reaction: reaction.reaction,
+                    user: reaction.user
+                })
+                console.log('reaction', reactionCreate);
+
+                await this.sever.emit(`reaction-message-${reaction.message}`, {
+                    reaction:reaction,
+                    status:status
+                })
+                return
+            }
+            case 2: {
+                //update
+                this.updateReaction(reaction,status)
+                return
+            }
+            case 3: {
+                //delete
+                this.deleteReaction(reaction,status)
+                return
+            }
+        }
+
 
     }
 
@@ -157,6 +182,45 @@ export class SocketGateWay {
         friendIds.forEach((id) => {
             this.sever.emit(`notification-${id}`, noti)
         })
+
+    }
+
+    private async updateReaction(reaction: LikeMessage,status:number) {
+        const reactionQuery = await this.likeMessageRepository.findOne({
+            where: {
+                user: reaction.user,
+                message: reaction.message
+            }
+        })
+
+        const reactionUpdate = await this.likeMessageRepository.save({
+            ...reactionQuery,
+            reaction: reaction.reaction
+        })
+
+        if (!reactionUpdate) return
+
+        await this.sever.emit(`reaction-message-${reactionUpdate.message}`, {
+            reaction:reaction,
+            status:status
+        })
+
+    }
+
+    private async deleteReaction(reaction: LikeMessage,status:number) {
+        try {
+            await this.likeMessageRepository.delete({
+                user:reaction.user,
+                message:reaction.message
+            })
+            await this.sever.emit(`reaction-message-${reaction.message}`, {
+                reaction:reaction,
+                status:status
+            })
+        } catch (error) {
+
+        }
+
 
     }
 }
