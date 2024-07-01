@@ -252,8 +252,13 @@ export class PostsService {
         )
         .leftJoin('p.media', 'media')
         .addSelect(['media.url', 'media.resource_type'])
+
         .leftJoin('p.tags', 'tags')
         .leftJoin('tags.user', 'user')
+
+        .leftJoin('p.share', 'share')
+        .addSelect(['share.id'])
+
         .addSelect(['user.fullname', 'tags.user'])
         .leftJoin('p.creater', 'creater')
         .addSelect(['creater.id', 'creater.fullname', 'creater.avatar'])
@@ -456,6 +461,8 @@ export class PostsService {
         .andWhere(
           `p.creater IN (:...ids)`, { ids: [...idfriendOfUsers, user_req] }
         )
+        .leftJoin('p.share', 'share')
+        .addSelect(['share.id'])
 
         .leftJoin('p.creater','creater')
         .addSelect(['creater.id','creater.fullname','creater.avatar'])
