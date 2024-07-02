@@ -35,22 +35,30 @@ export class GroupChatService {
 
         //message
         .innerJoinAndSelect('g.messages', 'm')
+        .leftJoin('m.group', 'gm')
+        .addSelect('gm.id')
+
+        .leftJoin('m.parent','p')
+        .addSelect(['p.id'])
+        .leftJoin('p.sender','p_sender')
+        .addSelect(['p_sender.id', 'p_sender.fullname', 'p_sender.avatar'])
+        
         .leftJoin('m.sender', 'sender')
         .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
+
         .leftJoin('m.reactions', 'reactions')
-        .addSelect(['reactions.reaction','reactions.id','reactions.user'])
+        .addSelect(['reactions.reaction', 'reactions.id', 'reactions.user'])
         //người đã đọc tin nhắn
         .leftJoinAndSelect('m.reads', 'read')
         .leftJoin('read.user', 'user-read')
         .addSelect(['user-read.avatar', 'user-read.fullname', 'user-read.id'])
         .orderBy('m.create_at', 'DESC')
 
-        
+
 
         .where(`g.id IN (SELECT gc.id FROM group_chat gc 
       left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
         .getMany()
-
       return groups;
     } catch (error) {
       return {

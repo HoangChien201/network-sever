@@ -30,14 +30,24 @@ export class MessageService {
   async findByGroup(group_id: number): Promise<Message[]> {
     const messages = await this.messageReposity
       .createQueryBuilder('m')
+
+      .leftJoin('m.group', 'g')
+      .addSelect('g.id')
+
+      //parent
+      .leftJoin('m.parent', 'p')
+      .addSelect(['p.id'])
+      .leftJoin('p.sender', 'p_sender')
+      .addSelect(['p_sender.id', 'p_sender.fullname', 'p_sender.avatar'])
+
       .leftJoin('m.sender', 'sender')
       .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
       .leftJoin('m.reactions', 'reactions')
-      .addSelect(['reactions.reaction','reactions.id','reactions.user'])
+      .addSelect(['reactions.reaction', 'reactions.id', 'reactions.user'])
 
       .leftJoinAndSelect('m.reads', 'read')
-      .leftJoin('read.user','user')
-      .addSelect(['user.avatar','user.fullname','user.id'])
+      .leftJoin('read.user', 'user')
+      .addSelect(['user.avatar', 'user.fullname', 'user.id'])
 
       .where({
         group: group_id
