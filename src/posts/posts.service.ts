@@ -251,7 +251,7 @@ export class PostsService {
           }
         )
         .leftJoin('p.media', 'media')
-        .addSelect(['media.url', 'media.resource_type'])
+        .addSelect(['media.url', 'media.resource_type','media.id'])
 
         .leftJoin('p.tags', 'tags')
         .leftJoin('tags.user', 'user')
@@ -344,7 +344,7 @@ export class PostsService {
         createQueryBuilder('p')
         .select()
         .leftJoin('p.media', 'media')
-        .addSelect(['media.url', 'media.resource_type'])
+        .addSelect(['media.url', 'media.resource_type','media.id'])
         .leftJoin('p.tags', 'tags')
         .leftJoin('tags.user', 'user')
         .addSelect(['user.fullname', 'tags.user'])
@@ -468,7 +468,7 @@ export class PostsService {
         .addSelect(['creater.id','creater.fullname','creater.avatar'])
 
         .leftJoin('p.media', 'media')
-        .addSelect(['media.url', 'media.resource_type'])
+        .addSelect(['media.url', 'media.resource_type','media.id'])
 
         .leftJoin('p.tags', 'tags')
         .leftJoin('tags.user', 'user')
@@ -711,50 +711,7 @@ export class PostsService {
 
   async remove(id: number) {
     try {
-      // await this.likePostRepository.delete({
-      //   posts:id
-      // })
-
-      // const comments = await this.commentRepository.find({
-      //   where:{
-      //     posts:id
-      //   }
-      // })
-
-      // if(comments.length>0){
-      //   const commentsID=comments.map(c=>c.id)
-
-      //   let commentChildren = await this.commentRepository
-      //   .createQueryBuilder('c')
-      //   .where(`c.parent IN (:...comment_ids)`,{comment_ids:commentsID})
-      //   .getMany()
-  
-      //   //filter id commentchildren
-      //   const commentChildrenID=commentChildren.map(c=>c.id)
-        
-      //   if(commentChildrenID.length > 0){
-      //     await this.likeCommentRepository
-      //     .createQueryBuilder()
-      //     .delete()
-      //     .from(LikeComment)
-      //     .where(`comment IN (:...comment_ids)`,{comment_ids:[...commentChildrenID,...commentsID]})
-      //     .execute()      
-      //   }
-      //   await this.commentRepository
-      //   .createQueryBuilder()
-      //   .delete()
-      //   .from(Comment)
-      //   .where(`posts = ${id}`)
-      //   .execute()
-      // }
-
-      // await this.mediaRepository.delete({
-      //   posts_id:id
-      // })
-      // await this.tagRepository.delete({
-      //   posts_id:id
-      // })
-
+      
       const posts=await this.postsRepository.findOne({ where:{id:id} })
       await this.postsRepository.save({
         ...posts,
