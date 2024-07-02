@@ -63,6 +63,7 @@ export class SocketGateWay {
 
         memberOfGroupIDs.forEach((member) => {
             this.sever.emit(`message-${member}`, messageSK)
+            this.sever.emit(`list-group-${member}`, messageSK)
         })
 
     }
