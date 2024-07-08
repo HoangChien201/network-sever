@@ -31,4 +31,7 @@ export class Comment {
 
     @UpdateDateColumn()
     update_at: Date
+
+    @Column()
+    status:number;
 }

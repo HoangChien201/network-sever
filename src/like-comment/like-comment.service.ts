@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LikeComment } from './entities/like-comment.entity';
 import { Repository } from 'typeorm';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
-import { error } from 'console';
 import { Exception } from 'handlebars';
 
 @Injectable()
@@ -94,7 +93,7 @@ export class LikeCommentService {
           comment: comment_id
         }
       })
-      const likeUpdate = await this.likeCommentRepository.save({
+      await this.likeCommentRepository.save({
         ...likeOld,
         ...updateLikeCommentDto
       })

@@ -8,6 +8,10 @@ import { User } from 'src/user/entities/user.entity';
 import { LikeComment } from 'src/like-comment/entities/like-comment.entity';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 
+const STATUS_SHOW=1;
+const STATUS_HIDE=0;
+
+
 @Injectable()
 export class CommentService {
   constructor(
@@ -46,7 +50,8 @@ export class CommentService {
       .addSelect('parent.id')
       .where({
         posts: posts_id,
-        parent: IsNull()
+        parent: IsNull(),
+        status:STATUS_SHOW
       })
       .orderBy({
         'c.create_at': 'DESC'
@@ -88,7 +93,10 @@ export class CommentService {
       .where(
         'c.posts =:posts_id', { posts_id: posts_id }
       )
-      .andWhere({ parent: IsNull() })
+      .andWhere({ 
+        parent: IsNull(),
+        status:STATUS_SHOW
+       })
       .orderBy('c.create_at', 'DESC')
       .getRawMany();
 
@@ -114,7 +122,8 @@ export class CommentService {
       .leftJoin('c.parent', 'parent')
       .addSelect('parent.id')
       .where({
-        parent: comment_id
+        parent: comment_id,
+        status:STATUS_SHOW
       })
       .orderBy({
         'c.create_at': 'DESC'
@@ -156,6 +165,9 @@ export class CommentService {
       .where(
         'c.parent =:comment_id', { comment_id: comment_id }
       )
+      .andWhere({
+        status:STATUS_SHOW
+      })
       .orderBy('c.create_at', 'DESC')
       .getRawMany();
 
