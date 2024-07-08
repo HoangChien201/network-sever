@@ -83,22 +83,32 @@ export class LikeCommentService {
 
   }
 
-  async update(user_id: number, comment_id: number, updateLikeCommentDto: UpdateLikeCommentDto) {
+  async update( comment_id: number,user_id: number, updateLikeCommentDto: UpdateLikeCommentDto) {
     if (!comment_id || !user_id) {
       throw Exception
     }
-
-    const likeOld = await this.likeCommentRepository.findOne({
-      where: {
-        user: user_id,
-        comment: comment_id
-      }
-    })
-    const likeUpdate = await this.likeCommentRepository.save({
-      ...likeOld,
-      ...updateLikeCommentDto
-    })
-    return likeUpdate;
+    try {
+      const likeOld = await this.likeCommentRepository.findOne({
+        where: {
+          user: user_id,
+          comment: comment_id
+        }
+      })
+      const likeUpdate = await this.likeCommentRepository.save({
+        ...likeOld,
+        ...updateLikeCommentDto
+      })
+      return {
+        status:1,
+        message:"successfully"
+      };
+    } catch (error) {
+      return {
+        status:-1,
+        message:""+error
+      };
+    }
+    
   }
 
   async remove(comment_id: number, user_id: number) {
