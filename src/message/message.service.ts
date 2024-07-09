@@ -5,13 +5,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Message } from './entities/message.entity';
 import { Repository } from 'typeorm';
 import { LikeMessage } from 'src/like-message/entities/like-message.entity';
+import { MessageRead } from 'src/message-read/entities/message-read.entity';
 
 @Injectable()
 export class MessageService {
 
   constructor(
     @InjectRepository(Message)
-    private readonly messageReposity: Repository<Message>
+    private readonly messageReposity: Repository<Message>,
+    @InjectRepository(LikeMessage)
+    private readonly likeMessageReposity: Repository<LikeMessage>,
+    @InjectRepository(MessageRead)
+    private readonly messageReadReposity: Repository<MessageRead>
   ) { }
 
   async create(createMessageDto: CreateMessageDto): Promise<any> {
@@ -81,6 +86,12 @@ export class MessageService {
 
   async remove(id: number) {
     try {
+      await this.likeMessageReposity.delete({
+        message:id
+      })
+      await this.messageReadReposity.delete({
+        message:id
+      })
       await this.messageReposity.delete({ id: id })
       return {
         status: 1,
