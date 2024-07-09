@@ -26,6 +26,8 @@ export class CommentService {
     try {
       const creater = req.headers[USER_ID_HEADER_NAME]
       createCommentDto['user'] = creater
+      createCommentDto['status'] = 1
+
       await this.commnentRepository.save(createCommentDto)
       return {
         status: 1,
