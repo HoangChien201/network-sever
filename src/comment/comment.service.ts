@@ -7,6 +7,7 @@ import { IsNull, Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { LikeComment } from 'src/like-comment/entities/like-comment.entity';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
+import { error } from 'console';
 
 const STATUS_SHOW=1;
 const STATUS_HIDE=0;
@@ -209,35 +210,42 @@ export class CommentService {
 
   async remove(id: number) {
     try {
-      const commentChildren = await this.commnentRepository.createQueryBuilder('c')
-      .where({
-        parent:id
-      })
-      .getMany()
+      // const commentChildren = await this.commnentRepository.createQueryBuilder('c')
+      // .where({
+      //   parent:id
+      // })
+      // .getMany()
 
-      if(commentChildren.length > 0){
+      // if(commentChildren.length > 0){
         
-        const commentChildrenIds = commentChildren.map((c) => c.id)
+      //   const commentChildrenIds = commentChildren.map((c) => c.id)
     
-        await this.likeCommnentRepository.createQueryBuilder()
-          .delete()
-          .from(LikeComment)
-          .where("comment IN (:...ids)", { ids: commentChildrenIds })
-          .execute()
-      }
+      //   await this.likeCommnentRepository.createQueryBuilder()
+      //     .delete()
+      //     .from(LikeComment)
+      //     .where("comment IN (:...ids)", { ids: commentChildrenIds })
+      //     .execute()
+      // }
 
-      await this.commnentRepository.delete({
-        parent: id
-      })
+      // await this.commnentRepository.delete({
+      //   parent: id
+      // })
 
-      await this.likeCommnentRepository.createQueryBuilder()
-          .delete()
-          .from(LikeComment)
-          .where("comment = :id", { id:id })
-          .execute()
+      // await this.likeCommnentRepository.createQueryBuilder()
+      //     .delete()
+      //     .from(LikeComment)
+      //     .where("comment = :id", { id:id })
+      //     .execute()
 
-      await this.commnentRepository.delete({
-        id: id
+      // await this.commnentRepository.delete({
+      //   id: id
+      // })
+
+      const commnent= await this.commnentRepository.findOne({where:{id:id}})
+      if(!commnent) throw error
+      await this.commnentRepository.save({
+        ...commnent,
+        type:0
       })
       return {
         message: "Delete success",
