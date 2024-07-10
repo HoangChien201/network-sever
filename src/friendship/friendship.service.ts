@@ -42,9 +42,9 @@ export class FriendshipService {
     const query = await this.friendShipRepository
       .createQueryBuilder('f')
       .leftJoin('f.user2', 'user2')
-      .addSelect(['user2.id', 'user2.fullname', 'user2.avatar'])
+      .addSelect(['user2.id', 'user2.fullname', 'user2.avatar','user2.dateOfBirth'])
       .leftJoin('f.user1', 'user1')
-      .addSelect(['user1.id', 'user1.fullname', 'user1.avatar'])
+      .addSelect(['user1.id', 'user1.fullname', 'user1.avatar','user1.dateOfBirth'])
       //case user request make friend
       .where({
         status: status
