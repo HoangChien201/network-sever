@@ -33,7 +33,7 @@ export class User {
     role:number;
 
     @Column({nullable:true})
-    backgroud:string;
+    background:string;
 
     @Column({nullable:true})
     gender:string;
