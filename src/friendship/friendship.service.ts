@@ -23,6 +23,19 @@ export class FriendshipService {
   async create(createFriendshipDto: CreateFriendshipDto, request: Request) {
     try {
       const user_req = request.headers[USER_ID_HEADER_NAME]
+      const friendship= await this.friendShipRepository.find({
+        where:{
+          user1:user_req,
+          user2:createFriendshipDto['user2']
+        }
+      })
+      if(friendship) {
+        return {
+          status:-1,
+          message:"Exist"
+        }
+      }
+        
       createFriendshipDto["user1"] = parseInt(user_req)
       createFriendshipDto["status"]=1
       return await this.friendShipRepository.save(createFriendshipDto)
@@ -79,10 +92,6 @@ export class FriendshipService {
         f.user2 = undefined
         f.user1 = undefined
         return f
-      }
-    }).filter(value=>{
-      if(value['user']['id'] !== user_req){
-        return value
       }
     })
 
