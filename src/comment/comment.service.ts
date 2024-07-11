@@ -247,7 +247,7 @@ export class CommentService {
       if(!commnent) throw error
       await this.commnentRepository.save({
         ...commnent,
-        type:0
+        status:0
       })
       return {
         message: "Delete success",
