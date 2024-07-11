@@ -98,6 +98,7 @@ export class UserService {
         .where({
           id: user_id
         })
+        .orderBy('create_at','DESC')
         .getOne()
 
       historyLikes.password = undefined
