@@ -22,7 +22,8 @@ export class LikeCommentService {
       const likeComment= await this.likeCommentRepository.findOne({
         where:{
           comment:comment,
-          reaction:reaction
+          reaction:reaction,
+          user:creater
         }
       })
 
