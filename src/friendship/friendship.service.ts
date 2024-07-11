@@ -80,6 +80,10 @@ export class FriendshipService {
         f.user1 = undefined
         return f
       }
+    }).filter(value=>{
+      if(value['user']['id'] !== user_req){
+        return value
+      }
     })
 
     return query;
