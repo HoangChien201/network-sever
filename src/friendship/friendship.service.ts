@@ -169,9 +169,6 @@ export class FriendshipService {
         return !idfriendOfUsers.includes(id)
       })
 
-      //random 5 id bạn bè của bạn bè user
-
-      //đẩy thông tin của 5 id random ở trên
       const userCommend = await this.userRepository.
         createQueryBuilder('u')
         .select(['u.id', 'u.fullname', 'u.avatar'])
