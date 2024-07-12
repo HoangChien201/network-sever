@@ -6,19 +6,32 @@ import { GroupChat } from './entities/group-chat.entity';
 import { Repository } from 'typeorm';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { Message } from 'src/message/entities/message.entity';
+import { GroupMember } from 'src/group-member/entities/group-member.entity';
+import { MessageService } from 'src/message/message.service';
 
 @Injectable()
 export class GroupChatService {
   constructor(
     @InjectRepository(GroupChat)
-    private readonly groupRepository: Repository<GroupChat>
+    private readonly groupRepository: Repository<GroupChat>,
+    @InjectRepository(GroupMember)
+    private readonly groupMemberRepository: Repository<GroupMember>
   ) { }
 
-  async create(createGroupChatDto: CreateGroupChatDto) {
-    if (!createGroupChatDto.image) {
-      createGroupChatDto.image = "http://res.cloudinary.com/delivery-food/image/upload/v1717925637/oqbqmqtswalnlfrmhayn.png"
+  async create(createDto: CreateGroupChatDto) {
+    try {
+      const groupExist= await this.CheckGroupExist(createDto)
+      if(groupExist){
+        return groupExist
+      }
+
+      return await this.CreateGroup(createDto)
+      
+        
+    } catch (error) {
+      console.log('error',error);
+
     }
-    return await this.groupRepository.save(createGroupChatDto);
   }
 
   async findByUser(req: Request) {
@@ -38,11 +51,11 @@ export class GroupChatService {
         .leftJoin('m.group', 'gm')
         .addSelect('gm.id')
 
-        .leftJoin('m.parent','p')
+        .leftJoin('m.parent', 'p')
         .addSelect(['p.id'])
-        .leftJoin('p.sender','p_sender')
+        .leftJoin('p.sender', 'p_sender')
         .addSelect(['p_sender.id', 'p_sender.fullname', 'p_sender.avatar'])
-        
+
         .leftJoin('m.sender', 'sender')
         .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
 
@@ -71,10 +84,12 @@ export class GroupChatService {
 
   async update(id: number, updateGroupChatDto: UpdateGroupChatDto) {
     try {
+      const { members, ...updateGroup } = updateGroupChatDto
+
       const group = await this.groupRepository.findOne({ where: { id: id } })
       await this.groupRepository.save({
         ...group,
-        ...updateGroupChatDto
+        ...updateGroup
       })
       return {
         status: 1,
@@ -101,5 +116,40 @@ export class GroupChatService {
         message: "Delete Fail " + error
       };
     }
+  }
+
+  private async CreateGroup(createDto:CreateGroupChatDto){
+    const { members, ...createGroup } = createDto
+
+    if (!createGroup.image) {
+      createGroup.image = "http://res.cloudinary.com/delivery-food/image/upload/v1717925637/oqbqmqtswalnlfrmhayn.png"
+    }
+    const groupSave = await this.groupRepository.save(createGroup);
+
+    if (members) {
+      members.forEach(async (m) => {
+        const member = {
+          user: m,
+          group: groupSave.id
+        }
+        await this.groupMemberRepository.save(member)
+      })
+    }
+    return groupSave
+  }
+
+  private async CheckGroupExist(createDto:CreateGroupChatDto):Promise<any>{
+    const {members,type}=createDto
+
+    const group= await this.groupRepository.createQueryBuilder('gc')
+    .leftJoin('gc.members','member')
+    .addSelect('COUNT(member.user)','member_count')
+    .where(`
+     member.user in (:...ids) and gc.type = '${type}'`,{ids:members})
+    .groupBy('gc.id')
+    .having(`COUNT(member.user) = (select count(gm2.group) from group_member gm2 where gm2.group = gc.id);`)
+    .getOne()
+      
+    return group
   }
 }
