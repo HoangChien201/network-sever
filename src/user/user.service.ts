@@ -28,6 +28,9 @@ export class UserService {
     if(!createUserDto.avatar){
       createUserDto.avatar='https://res.cloudinary.com/delivery-food/image/upload/v1718218858/fp7kzwqvzxmsjvbynygp.jpg'
     }
+    if(!createUserDto.background){
+      createUserDto.background='https://res.cloudinary.com/delivery-food/image/upload/v1720821342/background_2_wwfdf1.jpg'
+    }
     return await this.userRepository.save(createUserDto);
   }
 
