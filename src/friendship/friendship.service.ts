@@ -23,7 +23,7 @@ export class FriendshipService {
   async create(createFriendshipDto: CreateFriendshipDto, request: Request) {
     try {
       const user_req = request.headers[USER_ID_HEADER_NAME]
-      const friendship= await this.friendShipRepository.find({
+      const friendship= await this.friendShipRepository.findOne({
         where:{
           user1:user_req,
           user2:createFriendshipDto['user2']
