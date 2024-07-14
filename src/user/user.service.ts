@@ -81,27 +81,32 @@ export class UserService {
         //joinlikePost
         .leftJoin('u.likePosts', 'lp')
         .addSelect(['lp.reaction', 'lp.create_at', 'lp.update_at'])
+        .orderBy('lp.create_at','DESC')
 
         //joinPost
         .leftJoinAndSelect('lp.posts', 'posts')
         .leftJoin('posts.creater', 'creater')
         .addSelect(['creater.fullname', 'creater.id'])
+        .orderBy('posts.create_at','DESC')
+
 
         //join like comment
         .leftJoinAndSelect('u.likeComments', 'lc')
         .leftJoin('lc.user', 'uLikeC')
         .addSelect(['uLikeC.fullname', 'uLikeC.id'])
+        .orderBy('lc.create_at','DESC')
 
         //join comment
         .leftJoinAndSelect('u.comments', 'comment')
         .leftJoinAndSelect('comment.posts', 'pComment')
         .leftJoin('pComment.creater', 'pComment_Creater')
         .addSelect(['pComment_Creater.fullname', 'pComment_Creater.id'])
+        .orderBy('comment.create_at','DESC')
 
         .where({
           id: user_id
         })
-        .orderBy('create_at','DESC')
+        
         .getOne()
 
       historyLikes.password = undefined
