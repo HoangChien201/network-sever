@@ -20,16 +20,16 @@ export class GroupChatService {
 
   async create(createDto: CreateGroupChatDto) {
     try {
-      const groupExist= await this.CheckGroupExist(createDto)
-      if(groupExist){
+      const groupExist = await this.CheckGroupExist(createDto)
+      if (groupExist && createDto.type === 'single') {
         return groupExist
       }
 
       return await this.CreateGroup(createDto)
-      
-        
+
+
     } catch (error) {
-      console.log('error',error);
+      console.log('error', error);
 
     }
   }
@@ -118,38 +118,65 @@ export class GroupChatService {
     }
   }
 
-  private async CreateGroup(createDto:CreateGroupChatDto){
+  private async CreateGroup(createDto: CreateGroupChatDto) {
     const { members, ...createGroup } = createDto
 
     if (!createGroup.image) {
       createGroup.image = "http://res.cloudinary.com/delivery-food/image/upload/v1717925637/oqbqmqtswalnlfrmhayn.png"
     }
     const groupSave = await this.groupRepository.save(createGroup);
-
+    
     if (members) {
-      members.forEach(async (m) => {
-        const member = {
-          user: m,
-          group: groupSave.id
-        }
-        await this.groupMemberRepository.save(member)
-      })
+      const memberne=await this.groupMemberRepository.createQueryBuilder()
+      .insert()
+      .into(GroupMember)
+      .values([
+        ...members.map((m) => {
+          return {
+            user: m,
+            group: groupSave.id
+          }
+        })
+      ])
+      .execute()
+    console.log(memberne);
+      
     }
-    return groupSave
+
+    const group_respone= await this.groupRepository.createQueryBuilder('g')
+
+      .leftJoin('g.members', 'member')
+      .addSelect('member.user')
+
+      //member
+      .leftJoin('member.user', 'user')
+      .addSelect(['user.id', 'user.fullname', 'user.avatar'])
+
+      .where(`g.id = ${groupSave.id}`)
+      .getOne()
+      return group_respone;
+      
   }
 
-  private async CheckGroupExist(createDto:CreateGroupChatDto):Promise<any>{
-    const {members,type}=createDto
+  private async CheckGroupExist(createDto: CreateGroupChatDto): Promise<any> {
+    const { members, type } = createDto
+    try {
+      const group = await this.groupRepository.createQueryBuilder('gc')
+        .leftJoin('gc.members', 'member')
+        .addSelect('COUNT(member.user)', 'member_count')
+        .where(`
+     member.user in (:...ids) and gc.type = '${type}'`, { ids: members })
+        .groupBy('gc.id')
+        .having(`COUNT(member.user) = (select count(gm2.group) from group_member gm2 where gm2.group = gc.id);`)
+        .getOne()
 
-    const group= await this.groupRepository.createQueryBuilder('gc')
-    .leftJoin('gc.members','member')
-    .addSelect('COUNT(member.user)','member_count')
-    .where(`
-     member.user in (:...ids) and gc.type = '${type}'`,{ids:members})
-    .groupBy('gc.id')
-    .having(`COUNT(member.user) = (select count(gm2.group) from group_member gm2 where gm2.group = gc.id);`)
-    .getOne()
-      
-    return group
+      return group
+    } catch (error) {
+      return {
+        status: -1,
+        message: '' + error
+      }
+    }
+
   }
 }
