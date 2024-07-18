@@ -25,9 +25,9 @@ export class UserService {
 
     createUserDto.password = passwordHashed
     const avatars=[
-      'https://res.cloudinary.com/delivery-food/image/upload/v1721317024/red-panda_ichpai.png',
-      'https://res.cloudinary.com/delivery-food/image/upload/v1721317024/penguin_rei3qn.png',
-      'https://res.cloudinary.com/delivery-food/image/upload/v1721317024/panda_ybmlux.png'
+      'https://res.cloudinary.com/delivery-food/image/upload/v1721319651/red-panda_oexsx7.png',
+      'https://res.cloudinary.com/delivery-food/image/upload/v1721319685/penguin_j3zp9q.png',
+      'https://res.cloudinary.com/delivery-food/image/upload/v1721319671/panda_z7n43l.png'
     ]
     if(!createUserDto.avatar){
       createUserDto.avatar=avatars[Math.floor(Math.random() * avatars.length) ]
