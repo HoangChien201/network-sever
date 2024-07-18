@@ -24,9 +24,13 @@ export class UserService {
     const passwordHashed = await bcrypt.hash(password, saltOrRounds);
 
     createUserDto.password = passwordHashed
-
+    const avatars=[
+      'https://res.cloudinary.com/delivery-food/image/upload/v1721317024/red-panda_ichpai.png',
+      'https://res.cloudinary.com/delivery-food/image/upload/v1721317024/penguin_rei3qn.png',
+      'https://res.cloudinary.com/delivery-food/image/upload/v1721317024/panda_ybmlux.png'
+    ]
     if(!createUserDto.avatar){
-      createUserDto.avatar='https://res.cloudinary.com/delivery-food/image/upload/v1718218858/fp7kzwqvzxmsjvbynygp.jpg'
+      createUserDto.avatar=avatars[Math.floor(Math.random() * avatars.length) ]
     }
     if(!createUserDto.background){
       createUserDto.background='https://res.cloudinary.com/delivery-food/image/upload/v1720821342/background_2_wwfdf1.jpg'
