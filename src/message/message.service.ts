@@ -21,6 +21,7 @@ export class MessageService {
 
   async create(createMessageDto: CreateMessageDto): Promise<any> {
     try {
+      createMessageDto.state=1;
       return await this.messageReposity.save(createMessageDto);
 
     } catch (error) {
