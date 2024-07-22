@@ -21,8 +21,13 @@ export class MessageService {
 
   async create(createMessageDto: CreateMessageDto): Promise<any> {
     try {
-      createMessageDto.state=1;
-      return await this.messageReposity.save(createMessageDto);
+      createMessageDto.state = 1;
+      const messageCreate = await this.messageReposity.save(createMessageDto);
+      return await this.messageReadReposity.createQueryBuilder('m')
+        .leftJoin('p.sender', 'p_sender')
+        .addSelect(['p_sender.id', 'p_sender.fullname', 'p_sender.avatar'])
+        .where(`m.id = ${messageCreate.id}`)
+        .getOne()
 
     } catch (error) {
       return {
@@ -88,10 +93,10 @@ export class MessageService {
   async remove(id: number) {
     try {
       await this.likeMessageReposity.delete({
-        message:id
+        message: id
       })
       await this.messageReadReposity.delete({
-        message:id
+        message: id
       })
       await this.messageReposity.delete({ id: id })
       return {
