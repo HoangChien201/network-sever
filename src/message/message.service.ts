@@ -26,6 +26,8 @@ export class MessageService {
       return await this.messageReposity.createQueryBuilder('m')
         .leftJoin('m.sender', 'sender')
         .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
+        .leftJoin('m.group', 'g')
+        .addSelect('g.id')
         .where(`m.id = ${messageCreate.id}`)
         .getOne()
 
