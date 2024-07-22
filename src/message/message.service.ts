@@ -24,8 +24,8 @@ export class MessageService {
       createMessageDto.state = 1;
       const messageCreate = await this.messageReposity.save(createMessageDto);
       return await this.messageReadReposity.createQueryBuilder('m')
-        .leftJoin('p.sender', 'p_sender')
-        .addSelect(['p_sender.id', 'p_sender.fullname', 'p_sender.avatar'])
+        .leftJoin('m.sender', 'sender')
+        .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
         .where(`m.id = ${messageCreate.id}`)
         .getOne()
 
