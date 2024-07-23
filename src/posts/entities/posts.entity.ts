@@ -48,4 +48,7 @@ export class Posts {
 
     @Column()
     type:number
+
+    @Column()
+    emotion:number
 }
