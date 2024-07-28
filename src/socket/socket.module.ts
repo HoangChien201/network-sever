@@ -9,11 +9,12 @@ import { MessageReadService } from 'src/message-read/message-read.service';
 import { Message } from 'src/message/entities/message.entity';
 import { MessageRead } from 'src/message-read/entities/message-read.entity';
 import { LikeMessage } from 'src/like-message/entities/like-message.entity';
+import { User } from 'src/user/entities/user.entity';
 
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([GroupMember,Friendship,Message,MessageRead,LikeMessage]),
+    TypeOrmModule.forFeature([GroupMember,Friendship,Message,MessageRead,LikeMessage,User]),
 ],
   providers: [SocketGateWay],
 

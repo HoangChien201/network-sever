@@ -77,10 +77,7 @@ export class PostsService {
     }
 
     
-    return {
-      status:1,
-      message:'OKE'
-    };
+    return postsCreate
     } catch (error) {
       return {
         status:-1,
@@ -92,13 +89,11 @@ export class PostsService {
 
   private async sharePost(createPostDto: CreatePostDto, creater: number) {
     const posts_share = createPostDto['share']
-    console.log('share');
 
     //gán id người đăng bài viết
     createPostDto.creater = creater
     createPostDto['share'] = posts_share
     const { id, ...rest } = createPostDto
-    console.log('rest', rest);
 
     if (!posts_share) return "Không tìm thấy id bài posts cần share"
 

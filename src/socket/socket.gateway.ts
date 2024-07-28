@@ -11,13 +11,17 @@ import { MessageReadService } from "src/message-read/message-read.service";
 import { LikeMessageService } from "src/like-message/like-message.service";
 import { Injectable, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
+import { User } from "src/user/entities/user.entity";
 
 const STATUS_FRIENDED = 2
 const STATUS_REQUEST_FRIENDED = 1
 const STATUS_SEEN = 2
 const STATUS_SEND = 1
 
-
+type QRLoginType = {
+    user:User;
+    QRDevice:string
+}
 
 type MessageReadType = {
     group: number,
@@ -38,6 +42,8 @@ export class SocketGateWay {
         private readonly messageReadRepository: Repository<MessageRead>,
         @InjectRepository(LikeMessage)
         private readonly likeMessageRepository: Repository<LikeMessage>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
 
     ) { }
 
@@ -185,6 +191,15 @@ export class SocketGateWay {
         })
 
     }
+
+     //xử lý quét QRLogin
+     @SubscribeMessage('qr-login')
+     async QRLogin(@MessageBody() bodyQRLogin: QRLoginType): Promise<void> {
+        const {QRDevice,user}=bodyQRLogin;
+        if(!bodyQRLogin.user) return
+
+        this.sever.emit(`qr-login-${QRDevice}`,user)
+     }
 
     private async updateReaction(reaction: LikeMessage,status:number) {
         const reactionQuery = await this.likeMessageRepository.findOne({
