@@ -77,7 +77,11 @@ export class PostsService {
     }
 
     
-    return postsCreate
+     return {
+      status:1,
+      message:'OK',
+      post:postsCreate.id
+    }
     } catch (error) {
       return {
         status:-1,
