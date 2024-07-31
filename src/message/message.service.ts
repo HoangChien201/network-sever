@@ -6,6 +6,7 @@ import { Message } from './entities/message.entity';
 import { Repository } from 'typeorm';
 import { LikeMessage } from 'src/like-message/entities/like-message.entity';
 import { MessageRead } from 'src/message-read/entities/message-read.entity';
+import { GroupChat } from 'src/group-chat/entities/group-chat.entity';
 
 @Injectable()
 export class MessageService {
@@ -16,14 +17,16 @@ export class MessageService {
     @InjectRepository(LikeMessage)
     private readonly likeMessageReposity: Repository<LikeMessage>,
     @InjectRepository(MessageRead)
-    private readonly messageReadReposity: Repository<MessageRead>
+    private readonly messageReadReposity: Repository<MessageRead>,
+    @InjectRepository(GroupChat)
+    private readonly groupChatReposity: Repository<GroupChat>
   ) { }
 
   async create(createMessageDto: CreateMessageDto): Promise<any> {
     try {
       createMessageDto.state = 1;
       const messageCreate = await this.messageReposity.save(createMessageDto);
-      return await this.messageReposity.createQueryBuilder('m')
+      const msg= await this.messageReposity.createQueryBuilder('m')
         .leftJoin('m.sender', 'sender')
         .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
         .leftJoin('m.group', 'g')
@@ -31,6 +34,23 @@ export class MessageService {
         .where(`m.id = ${messageCreate.id}`)
         .getOne()
 
+        const group= await this.groupChatReposity.createQueryBuilder('g')
+        .innerJoin('g.members', 'member')
+        .addSelect('member.user')
+
+        //member
+        .innerJoin('member.user', 'user')
+        .addSelect(['user.id', 'user.fullname', 'user.avatar'])
+        .where(`g.id = ${msg.group['id']}`)
+        .getOne()
+
+        const receivers= group.members.filter(
+          (member)=> member.user['id'] !== msg.sender['id'])
+          .map(m=>m.user['id'])
+      return {
+        msg,
+        receivers
+      }
     } catch (error) {
       return {
         status: -1,

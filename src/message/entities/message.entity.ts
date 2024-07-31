@@ -12,7 +12,7 @@ export class Message {
     @ManyToOne(()=>User,(user)=>user.id)
     sender:number | Message
 
-    @ManyToOne(()=>GroupChat,(group)=>group.id)
+    @ManyToOne(()=>GroupChat,(group)=>group.id,{nullable:false})
     group:number | GroupChat
 
     @OneToMany(()=>MessageRead,(m)=>m.message)
