@@ -30,7 +30,7 @@ export class MessageService {
         .leftJoin('m.sender', 'sender')
         .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
         .leftJoin('m.group', 'g')
-        .addSelect('g.id')
+        .addSelect(['g.id','g.name','g.type'])
         .where(`m.id = ${messageCreate.id}`)
         .getOne()
 
