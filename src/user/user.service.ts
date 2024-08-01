@@ -33,7 +33,7 @@ export class UserService {
       createUserDto.avatar=avatars[Math.floor(Math.random() * avatars.length) ]
     }
     if(!createUserDto.background){
-      createUserDto.background='https://res.cloudinary.com/delivery-food/image/upload/v1720821342/background_2_wwfdf1.jpg'
+      createUserDto.background='https://res.cloudinary.com/delivery-food/image/upload/v1722530656/z5690548315368_5805bf08ee84b9e48529ddc376da128c_fb0qke.jpg'
     }
     return await this.userRepository.save(createUserDto);
   }
