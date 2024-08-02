@@ -49,6 +49,6 @@ export class Posts {
     @Column()
     type:number
 
-    @Column()
+    @Column({nullable:true})
     emotion:number
 }
