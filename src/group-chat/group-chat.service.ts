@@ -139,7 +139,6 @@ export class GroupChatService {
         })
       ])
       .execute()
-    console.log(memberne);
       
     }
 

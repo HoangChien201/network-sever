@@ -124,7 +124,12 @@ export class UserService {
     }
   }
 
-
+  async checkOnline(user_id:number){
+    const user= await this.userRepository.findOne({where:{id:user_id}})
+    return {
+      online:user.online
+    }
+  }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<any> {
     try {

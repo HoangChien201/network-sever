@@ -20,6 +20,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('/check-online/:id')
+  checkOnline(@Param('id') id:number):Promise<any> {
+    return this.userService.checkOnline(id);
+  }
+
   @Get('get-one/:id')
   @UseGuards(AuthGuard)
   findOne(@Param('id') id: string,@Req() req:Request):Promise<User | null> {

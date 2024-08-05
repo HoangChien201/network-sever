@@ -15,7 +15,6 @@ export class AuthMiddleware implements NestMiddleware {
 
     const bearerToken: string[] = authHeader.split(' ');
     const token: string = bearerToken[1];
-    console.log('middle');
     
     if (!token) {
         throw new UnauthorizedException();

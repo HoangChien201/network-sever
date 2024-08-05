@@ -14,12 +14,10 @@ export class CloudinaryController {
     @Post('uploads')
     @UseInterceptors(FilesInterceptor('files'))
     async uploadImages(@UploadedFiles() files: Express.Multer.File[]) {
-        console.log(files);
         
         const uploadResults = [];
         for (const file of files) {
             const {mimetype} = file
-            console.log(mimetype);
             
             try {
                 if(mimetype === 'video/mp4'){

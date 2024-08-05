@@ -24,6 +24,9 @@ export class User {
     fullname:string;
 
     @Column({nullable:true})
+    online:number;
+
+    @Column({nullable:true})
     avatar:string;
 
     @Column({nullable:true})
