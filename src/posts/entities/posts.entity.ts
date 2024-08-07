@@ -13,6 +13,21 @@ export class Posts {
     @Column({nullable:true})
     content: string;
 
+    @CreateDateColumn({ nullable: true })
+    create_at: Date
+
+    @UpdateDateColumn({ nullable: true })
+    update_at: Date
+
+    @Column()
+    permission: number
+
+    @Column()
+    type:number
+
+    @Column({nullable:true})
+    emotion:number
+
     //relation user
     @ManyToOne(() => User, (user) => user.posts)
     creater: User | number
@@ -36,19 +51,4 @@ export class Posts {
     //relation tag
     @OneToMany(() => TagPost, (tag) => tag.posts_id)
     tags: TagPost[]
-
-    @CreateDateColumn({ nullable: true })
-    create_at: Date
-
-    @UpdateDateColumn({ nullable: true })
-    update_at: Date
-
-    @Column()
-    permission: number
-
-    @Column()
-    type:number
-
-    @Column({nullable:true})
-    emotion:number
 }

@@ -18,9 +18,10 @@ export class CloudinaryController {
         const uploadResults = [];
         for (const file of files) {
             const {mimetype} = file
-            
+            const indexSlice = mimetype.toString().indexOf('/')
+            const typeMedia=mimetype.toString().slice(0, indexSlice)
             try {
-                if(mimetype === 'video/mp4'){
+                if(typeMedia === 'video'){
                     const result = await this.cloudinaryService.uploadVideo(file);
                     uploadResults.push(result);
                 }else{
