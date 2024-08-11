@@ -13,6 +13,7 @@ import { Friendship } from 'src/friendship/entities/friendship.entity';
 import { bodyGetByUser } from './posts.controller';
 import { LikeComment } from 'src/like-comment/entities/like-comment.entity';
 import { Media } from 'src/media/entities/media.entity';
+import { Request } from 'express';
 
 
 const PERMISSION_FRIEND=1
@@ -109,9 +110,9 @@ export class PostsService {
     try {
       const creater = request.headers[USER_ID_HEADER_NAME]
 
-      if (createPostDto['share']) return this.sharePost(createPostDto, creater)
+      if (createPostDto['share']) return this.sharePost(createPostDto, parseInt(creater.toString()))
 
-      return this.createPost(createPostDto, creater)
+      return this.createPost(createPostDto, parseInt(creater.toString()))
     } catch (error) {
       return error
     }
@@ -131,7 +132,7 @@ export class PostsService {
         })
         .andWhere(
           ()=>{
-            if(parseInt(user_id.toString()) === parseInt(user_req)){
+            if(parseInt(user_id.toString()) === parseInt(user_req.toString())){
               return `p.permission IN (:...permissions)`
             }
             else{
@@ -446,7 +447,7 @@ export class PostsService {
         }).getMany()
 
       const idfriendOfUsers = friendOfUser.map(f => {
-        if (f.user1 === user_req) {
+        if (f.user1 === parseInt(user_req.toString())) {
           return f.user2
         }
         return f.user1

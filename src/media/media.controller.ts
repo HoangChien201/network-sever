@@ -4,6 +4,7 @@ import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Media } from './entities/media.entity';
+import { Request } from 'express';
 
 @Controller('media')
 export class MediaController {

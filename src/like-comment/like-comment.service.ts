@@ -6,6 +6,7 @@ import { LikeComment } from './entities/like-comment.entity';
 import { Repository } from 'typeorm';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { Exception } from 'handlebars';
+import { Request } from 'express';
 
 @Injectable()
 export class LikeCommentService {
@@ -23,7 +24,7 @@ export class LikeCommentService {
         where:{
           comment:comment,
           reaction:reaction,
-          user:creater
+          user:parseInt(creater.toString())
         }
       })
 

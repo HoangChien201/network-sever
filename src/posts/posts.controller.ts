@@ -4,6 +4,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Posts } from './entities/posts.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Request } from 'express';
 
 export type bodyGetByUser={
   permission:number;

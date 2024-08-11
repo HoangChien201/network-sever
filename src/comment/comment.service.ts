@@ -8,6 +8,7 @@ import { User } from 'src/user/entities/user.entity';
 import { LikeComment } from 'src/like-comment/entities/like-comment.entity';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { error } from 'console';
+import { Request } from 'express';
 
 const STATUS_SHOW=1;
 const STATUS_HIDE=0;

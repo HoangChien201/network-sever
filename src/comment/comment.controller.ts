@@ -4,6 +4,7 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Comment } from './entities/comment.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Request } from 'express';
 
 @Controller('comment')
 export class CommentController {
@@ -11,7 +12,7 @@ export class CommentController {
 
   @Post()
   @UseGuards(AuthGuard)
-  create(@Body() createCommentDto: CreateCommentDto,@Req() req):Promise<Comment> {
+  create(@Body() createCommentDto: CreateCommentDto,@Req() req:Request):Promise<Comment> {
     return this.commentService.create(createCommentDto,req);
   }
 

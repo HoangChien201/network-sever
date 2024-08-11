@@ -4,6 +4,7 @@ import { CreateMessageReadDto } from './dto/create-message-read.dto';
 import { UpdateMessageReadDto } from './dto/update-message-read.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { MessageRead } from './entities/message-read.entity';
+import { Request } from 'express';
 
 @Controller('message-read')
 export class MessageReadController {

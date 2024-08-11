@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LikeMessage } from './entities/like-message.entity';
 import { Repository } from 'typeorm';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
+import { Request } from 'express';
 
 @Injectable()
 export class LikeMessageService {
@@ -19,7 +20,7 @@ export class LikeMessageService {
 
      await this.likeMessageRepository.save({
       ...createLikeMessageDto,
-      user: user_req
+      user: parseInt(user_req.toString())
     });
     return {
       status:1,
@@ -54,7 +55,7 @@ export class LikeMessageService {
 
       const likeMessageOld = await this.likeMessageRepository.findOne({
         where: {
-          user: user_req,
+          user: parseInt(user_req.toString()),
           message: message
         }
       })

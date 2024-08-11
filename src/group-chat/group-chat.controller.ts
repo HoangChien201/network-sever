@@ -4,6 +4,7 @@ import { CreateGroupChatDto } from './dto/create-group-chat.dto';
 import { UpdateGroupChatDto } from './dto/update-group-chat.dto';
 import { GroupChat } from './entities/group-chat.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Request } from 'express';
 
 @Controller('group-chat')
 export class GroupChatController {

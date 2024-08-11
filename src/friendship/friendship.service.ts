@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Friendship } from './entities/friendship.entity';
+import { Request } from 'express';
 
 const STATUS_FRIENDED = 2
 const STATUS_REQUEST_FRIENDED = 1
@@ -25,7 +26,7 @@ export class FriendshipService {
       const user_req = request.headers[USER_ID_HEADER_NAME]
       const friendship= await this.friendShipRepository.findOne({
         where:{
-          user1:user_req,
+          user1:parseInt(user_req.toString()),
           user2:createFriendshipDto['user2']
         }
       })
@@ -36,7 +37,7 @@ export class FriendshipService {
         }
       }
         
-      createFriendshipDto["user1"] = parseInt(user_req)
+      createFriendshipDto["user1"] = parseInt(user_req.toString())
       createFriendshipDto["status"]=1
       return await this.friendShipRepository.save(createFriendshipDto)
     } catch (error) {
@@ -146,7 +147,7 @@ export class FriendshipService {
 
       //lọc id bạn bè của user
       const idfriendOfUsers = friendOfUser.map(f => {
-        if (f.user1 === user_req) {
+        if (f.user1 === parseInt(user_req.toString())) {
           return f.user2
         }
         return f.user1
@@ -221,7 +222,7 @@ export class FriendshipService {
     try {
       const { user2 } = body
       await this.friendShipRepository.delete({
-        user1: user_req,
+        user1: parseInt(user_req.toString()),
         user2: user2,
         status:1
       })
@@ -243,7 +244,7 @@ export class FriendshipService {
       const { user1 } = body
       await this.friendShipRepository.delete({
         user1: user1,
-        user2: user_req,
+        user2: parseInt(user_req.toString()),
         status:1
       })
       return {
@@ -265,7 +266,7 @@ export class FriendshipService {
       const friendship=await this.friendShipRepository.findOne({
         where:{
           user1: user1,
-          user2: user_req, 
+          user2: parseInt(user_req.toString()), 
         }
         
       })
@@ -304,7 +305,7 @@ export class FriendshipService {
 
     //lọc id bạn bè của user
     const idfriendOfUsers = friendOfUser.map(f => {
-      if (f.user1 === user_req) {
+      if (f.user1 === parseInt(user_req.toString())) {
         return f.user2
       }
       return f.user1

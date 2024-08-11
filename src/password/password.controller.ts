@@ -3,6 +3,7 @@ import { PasswordService } from './password.service';
 import { PasswordGuard } from './password.gruard';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UpdateCommentDto } from 'src/comment/dto/update-comment.dto';
+import { Request } from 'express';
 
 @Controller('password')
 export class PasswordController {

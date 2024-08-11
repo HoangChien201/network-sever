@@ -8,6 +8,7 @@ import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { Message } from 'src/message/entities/message.entity';
 import { GroupMember } from 'src/group-member/entities/group-member.entity';
 import { MessageService } from 'src/message/message.service';
+import { Request } from 'express';
 
 @Injectable()
 export class GroupChatService {

@@ -4,6 +4,7 @@ import { CreateLikeCommentDto } from './dto/create-like-comment.dto';
 import { UpdateLikeCommentDto } from './dto/update-like-comment.dto';
 import { LikeComment } from './entities/like-comment.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Request } from 'express';
 
 @Controller('like-comment')
 export class LikeCommentController {

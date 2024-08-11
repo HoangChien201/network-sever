@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMediaDto } from './dto/create-media.dto';
-import { UpdateMediaDto } from './dto/update-media.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Media } from './entities/media.entity';
 import { Repository } from 'typeorm';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
+import { Request } from 'express';
 
 @Injectable()
 export class MediaService {

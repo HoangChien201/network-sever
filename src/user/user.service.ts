@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { Friendship } from 'src/friendship/entities/friendship.entity';
+import { Request } from 'express';
 
 @Injectable()
 export class UserService {
@@ -65,7 +66,7 @@ export class UserService {
       .getOne()
 
     //lọc id bạn bè của user
-    const statusFriend = this.FilterStatusFriend(user_req, friendOfUser)
+    const statusFriend = this.FilterStatusFriend(parseInt(user_req.toString()), friendOfUser)
 
     userQuery['relationship'] = statusFriend
     return userQuery
@@ -186,7 +187,7 @@ export class UserService {
 
     // //lọc id bạn bè của user
     const friendOfUsers = friendOfUser.map(f => {
-      return this.FilterStatusFriend(user_req, f)
+      return this.FilterStatusFriend(parseInt(user_req.toString()), f)
     })
 
     // lấy danh sách bạn bè của user

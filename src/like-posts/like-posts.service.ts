@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LikePost } from './entities/like-post.entity';
 import { Repository } from 'typeorm';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
+import { Request } from 'express';
 
 @Injectable()
 export class LikePostsService {
@@ -18,7 +19,6 @@ export class LikePostsService {
     const creater = request.headers[USER_ID_HEADER_NAME]
     try {
       createLikePostDto['user'] = creater
-      console.log(createLikePostDto);
       
       await this.likePostRepository.save(createLikePostDto);
       return {

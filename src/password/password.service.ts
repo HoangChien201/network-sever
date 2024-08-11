@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Request } from 'express';
 
 @Injectable()
 export class PasswordService {
@@ -89,7 +90,7 @@ export class PasswordService {
     try {
       let { passwordOld, passwordNew } = body
       const user_req = request.headers[USER_ID_HEADER_NAME]
-      const user = await this.userRepository.findOne({ where: { id: user_req } })
+      const user = await this.userRepository.findOne({ where: { id: parseInt(user_req.toString()) } })
 
       const isMatch = await bcrypt.compare(passwordOld.toString(), user.password);
 
@@ -102,7 +103,7 @@ export class PasswordService {
 
       const saltOrRounds = parseInt(process.env.SALTORROUNDS)
       const password = await bcrypt.hash(passwordNew.toString(), saltOrRounds);
-      await this.userService.update(user_req, { password })
+      await this.userService.update(parseInt(user_req.toString()), { password })
       return {
         "message": "Successful Change",
         "status": 1

@@ -4,6 +4,7 @@ import { CreateLikePostDto } from './dto/create-like-post.dto';
 import { UpdateLikePostDto } from './dto/update-like-post.dto';
 import { LikePost } from './entities/like-post.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Request } from 'express';
 
 @Controller('like-posts')
 export class LikePostsController {
