@@ -10,8 +10,8 @@ import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { error } from 'console';
 import { Request } from 'express';
 
-const STATUS_SHOW=1;
-const STATUS_HIDE=0;
+const STATUS_SHOW = 1;
+const STATUS_HIDE = 0;
 
 
 @Injectable()
@@ -25,6 +25,13 @@ export class CommentService {
 
   async create(createCommentDto: CreateCommentDto, req: Request): Promise<any> {
     try {
+      if (!createCommentDto.posts){
+        return {
+          status: -1,
+          message: "Post not undefine"
+        }
+      }
+        
       const creater = req.headers[USER_ID_HEADER_NAME]
       createCommentDto['user'] = creater
       createCommentDto['status'] = 1
@@ -55,7 +62,7 @@ export class CommentService {
       .where({
         posts: posts_id,
         parent: IsNull(),
-        status:STATUS_SHOW
+        status: STATUS_SHOW
       })
       .orderBy({
         'c.create_at': 'DESC'
@@ -97,10 +104,10 @@ export class CommentService {
       .where(
         'c.posts =:posts_id', { posts_id: posts_id }
       )
-      .andWhere({ 
+      .andWhere({
         parent: IsNull(),
-        status:STATUS_SHOW
-       })
+        status: STATUS_SHOW
+      })
       .orderBy('c.create_at', 'DESC')
       .getRawMany();
 
@@ -127,7 +134,7 @@ export class CommentService {
       .addSelect('parent.id')
       .where({
         parent: comment_id,
-        status:STATUS_SHOW
+        status: STATUS_SHOW
       })
       .orderBy({
         'c.create_at': 'DESC'
@@ -170,7 +177,7 @@ export class CommentService {
         'c.parent =:comment_id', { comment_id: comment_id }
       )
       .andWhere({
-        status:STATUS_SHOW
+        status: STATUS_SHOW
       })
       .orderBy('c.create_at', 'DESC')
       .getRawMany();
@@ -220,9 +227,9 @@ export class CommentService {
       // .getMany()
 
       // if(commentChildren.length > 0){
-        
+
       //   const commentChildrenIds = commentChildren.map((c) => c.id)
-    
+
       //   await this.likeCommnentRepository.createQueryBuilder()
       //     .delete()
       //     .from(LikeComment)
@@ -244,11 +251,11 @@ export class CommentService {
       //   id: id
       // })
 
-      const commnent= await this.commnentRepository.findOne({where:{id:id}})
-      if(!commnent) throw error
+      const commnent = await this.commnentRepository.findOne({ where: { id: id } })
+      if (!commnent) throw error
       await this.commnentRepository.save({
         ...commnent,
-        status:0
+        status: 0
       })
       return {
         message: "Delete success",

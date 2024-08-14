@@ -35,7 +35,7 @@ export class PasswordService {
                 <br>
                     Mã của bạn là: ${code}. Sử dụng nó để xác thực lấy lại mật khẩu của bạn.<br>
                 <br>
-                    Nếu bạn không yêu cầu điều này, lờ cmn tin nhắn này đi.<br>
+                    Nếu bạn không yêu cầu điều này, vui lòng bỏ qua tin nhắn này.<br>
                 <br>
                 Trân trọng,
                 <br>
