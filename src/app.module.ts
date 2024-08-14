@@ -35,70 +35,78 @@ import { PasswordModule } from './password/password.module';
 import { LikeMessageModule } from './like-message/like-message.module';
 import { LikeMessage } from './like-message/entities/like-message.entity';
 import { MessageReadModule } from './message-read/message-read.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
-  
+
   imports: [
     ConfigModule.forRoot({
-      envFilePath:'.env',
-      isGlobal:true
+      envFilePath: '.env',
+      isGlobal: true
     }),
     TypeOrmModule.forRoot({
-    type: 'mysql',
-    host: process.env.HOST_DB,
-    port: parseInt(process.env.PORT_DB),
-    username: process.env.USER_DB,
-    password: process.env.PASSWORD_DB,
-    database: process.env.NAME_DB,
-    entities: [User,Friendship,Posts,Comment,LikeComment,LikePost,Message,Media,TagPost,GroupChat,GroupMember,LikeMessage],
-    synchronize: false,
-    autoLoadEntities:true
-  }),
-  MailerModule.forRoot({
-    transport: {
-      host: 'smtp.gmail.com',
-      port: 587,
-      ignoreTLS: false,
-      secure: false,
-      auth: {
-        user: process.env.MAILDEV_INCOMING_USER,
-        pass: process.env.MAILDEV_INCOMING_PASS
+      type: 'mysql',
+      host: process.env.HOST_DB,
+      port: parseInt(process.env.PORT_DB),
+      username: process.env.USER_DB,
+      password: process.env.PASSWORD_DB,
+      database: process.env.NAME_DB,
+      entities: [User, Friendship, Posts, Comment, LikeComment, LikePost, Message, Media, TagPost, GroupChat, GroupMember, LikeMessage],
+      synchronize: false,
+      autoLoadEntities: true
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.gmail.com',
+        port: 587,
+        ignoreTLS: false,
+        secure: false,
+        auth: {
+          user: process.env.MAILDEV_INCOMING_USER,
+          pass: process.env.MAILDEV_INCOMING_PASS
+        },
       },
-    },
-    defaults: {
-      from: '"No Reply" <no-reply@localhost>',
-    },
-    preview: false,
-    template: {
-      dir: process.cwd() + '/template/',
-      adapter: new HandlebarsAdapter(), 
-      options: {
-        strict: true,
+      defaults: {
+        from: '"No Reply" <no-reply@localhost>',
       },
-    },
-  }),
-  FriendshipModule,
-  UserModule,
-  CloudinaryModule,
-  AuthModule,
-  PostsModule,
-  CommentModule,
-  LikePostsModule,
-  LikeCommentModule,
-  FriendshipModule,
-  MessageModule,
-  GroupChatModule,
-  GroupMemberModule,
-  MediaModule,
-  TagPostsModule,
-  SocketModule,
-  PasswordModule,
-  LikeMessageModule,
-  MessageReadModule
-],
+      preview: false,
+      template: {
+        dir: process.cwd() + '/template/',
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }),
+    FriendshipModule,
+    UserModule,
+    CloudinaryModule,
+    AuthModule,
+    PostsModule,
+    CommentModule,
+    LikePostsModule,
+    LikeCommentModule,
+    FriendshipModule,
+    MessageModule,
+    GroupChatModule,
+    GroupMemberModule,
+    MediaModule,
+    TagPostsModule,
+    SocketModule,
+    PasswordModule,
+    LikeMessageModule,
+    MessageReadModule,
+
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), '.well-known'),
+      serveRoot: '/.well-known',  // Chỉ phục vụ các tệp từ đường dẫn này
+      exclude: ['/'],
+    })
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource) { }
 }
