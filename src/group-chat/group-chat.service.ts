@@ -121,7 +121,7 @@ export class GroupChatService {
     }
   }
 
-  private async CreateGroup(req:Request,createDto: CreateGroupChatDto) {
+  private async CreateGroup(createDto: CreateGroupChatDto) {
     const { members, ...createGroup } = createDto
 
     if (!createGroup.image) {
