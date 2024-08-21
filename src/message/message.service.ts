@@ -92,7 +92,7 @@ export class MessageService {
   }
 
 
-  async update(id: number, updateMessageDto: UpdateMessageDto) {
+  async update(id: string, updateMessageDto: UpdateMessageDto) {
     try {
       const message = await this.messageReposity.findOne({ where: { id: id } })
 
@@ -112,7 +112,7 @@ export class MessageService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       await this.likeMessageReposity.delete({
         message: id

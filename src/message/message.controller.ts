@@ -23,12 +23,12 @@ export class MessageController {
   @Put('/update/:id')
   @UseGuards(AuthGuard)
   async update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
-    return this.messageService.update(+id, updateMessageDto);
+    return this.messageService.update(id, updateMessageDto);
   }
 
   @Delete('/delete/:id')
   @UseGuards(AuthGuard)
   async remove(@Param('id') id: string) {
-    return this.messageService.remove(+id);
+    return this.messageService.remove(id);
   }
 }

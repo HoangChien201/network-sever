@@ -87,7 +87,7 @@ export class LikeMessageService {
 
   }
 
-  async remove(mesage_id: number,user_id:number,request:Request) {
+  async remove(mesage_id: string,user_id:number,request:Request) {
     const user_req = request.headers[USER_ID_HEADER_NAME]
     try {
       if (+user_id !== +user_req) {

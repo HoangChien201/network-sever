@@ -13,7 +13,7 @@ export class MessageRead {
 
     @Column()
     @ManyToOne(()=>Message,(m)=>m.id)
-    message:number;
+    message:string;
 
     @CreateDateColumn()
     read_at:Date;

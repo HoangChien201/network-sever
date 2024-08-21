@@ -1,5 +1,5 @@
 export class CreateLikeMessageDto {
-    message:number;
+    message:string;
     user?:number;
     reaction:number
 }

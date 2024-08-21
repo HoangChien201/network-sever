@@ -10,7 +10,7 @@ export class LikeMessage {
 
     @Column()
     @ManyToOne(()=>Message,(msg)=>msg.reactions)
-    message:number;
+    message:string;
 
     @Column()
     @ManyToOne(()=>User,(user)=>user.likeMessages)

@@ -29,7 +29,7 @@ export class LikeMessageController {
 
   @Delete('/delete?')
   @UseGuards(AuthGuard)
-  remove(@Query('message_id') message_id:number,@Query('user_id') user_id:number,@Req() req:Request) {
-    return this.likeMessageService.remove(+message_id,+user_id,req);
+  remove(@Query('message_id') message_id:string,@Query('user_id') user_id:number,@Req() req:Request) {
+    return this.likeMessageService.remove(message_id,+user_id,req);
   }
 }
