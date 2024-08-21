@@ -11,6 +11,7 @@ export class GroupChatController {
   constructor(private readonly groupChatService: GroupChatService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   create(@Body() createGroupChatDto: CreateGroupChatDto) {
     return this.groupChatService.create(createGroupChatDto);
   }
@@ -22,11 +23,13 @@ export class GroupChatController {
   }
 
   @Put('/update/:id')
+  @UseGuards(AuthGuard)
   async update(@Param('id') id: string, @Body() updateGroupChatDto: UpdateGroupChatDto) {
     return this.groupChatService.update(+id, updateGroupChatDto);
   }
 
   @Delete('/delete/:id')
+  @UseGuards(AuthGuard)
   async remove(@Param('id') id: string) {
     return this.groupChatService.remove(+id);
   }

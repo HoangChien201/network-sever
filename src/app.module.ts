@@ -54,7 +54,8 @@ import { join } from 'path';
       database: process.env.NAME_DB,
       entities: [User, Friendship, Posts, Comment, LikeComment, LikePost, Message, Media, TagPost, GroupChat, GroupMember, LikeMessage],
       synchronize: false,
-      autoLoadEntities: true
+      autoLoadEntities: true,
+      timezone:'+07:00'
     }),
     MailerModule.forRoot({
       transport: {

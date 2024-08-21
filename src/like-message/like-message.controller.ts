@@ -16,6 +16,7 @@ export class LikeMessageController {
   }
 
   @Get('/get-by-message/:id')
+  @UseGuards(AuthGuard)
   findByMessage(@Param('id') message_id: string) {
     return this.likeMessageService.findByMessage(+message_id);
   }

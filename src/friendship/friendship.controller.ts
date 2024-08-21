@@ -59,6 +59,7 @@ export class FriendshipController {
 
 
   @Delete('un-friendship?')
+  @UseGuards(AuthGuard)
   unFriendShip(@Body() body:any) {
     return this.friendshipService.unFriendShip(body);
   }

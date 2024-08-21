@@ -52,11 +52,13 @@ export class PostsController {
   }
 
   @Put('/update/:id')
+  @UseGuards(AuthGuard)
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
   }
 
   @Delete('/delete/:id')
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: number) {
     return this.postsService.remove(+id);
   }

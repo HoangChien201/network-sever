@@ -3,15 +3,18 @@ import {
     Controller,
     Post,
     UploadedFiles,
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { CloudinaryService } from './cloudinary.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/auth/auth.guard';
 @Controller('image')
 export class CloudinaryController {
     constructor(private readonly cloudinaryService: CloudinaryService) { }
 
     @Post('uploads')
+    @UseGuards(AuthGuard)
     @UseInterceptors(FilesInterceptor('files'))
     async uploadImages(@UploadedFiles() files: Express.Multer.File[]) {
         

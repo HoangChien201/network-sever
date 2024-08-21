@@ -16,10 +16,7 @@ export class MessageReadController {
     return await this.messageReadService.create(createMessageReadDto,req);
   }
 
-  @Get()
-  findAll() {
-    return this.messageReadService.findAll();
-  }
+
 
   
 }

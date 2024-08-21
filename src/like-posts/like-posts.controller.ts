@@ -17,26 +17,31 @@ export class LikePostsController {
   }
 
   @Get('get-likes')
+  @UseGuards(AuthGuard)
   async findAll():Promise<LikePost[]> {
     return this.likePostsService.findAll();
   }
 
   @Get('get-by-user/:id')
+  @UseGuards(AuthGuard)
   async findByUser(@Param('id') id:number):Promise<LikePost[]> {
     return this.likePostsService.findByUser(+id);
   }
 
   @Get('get-by-posts/:id')
+  @UseGuards(AuthGuard)
   async findByPosts(@Param('id') id:number):Promise<LikePost[]> {
     return this.likePostsService.findByPosts(+id);
   }
 
   @Patch('update?')
+  @UseGuards(AuthGuard)
   async update(@Query('posts_id') posts_id:number,@Query('user_id') user_id:number, @Body() updateLikePostDto: UpdateLikePostDto) {
     return this.likePostsService.update(+posts_id,+user_id, updateLikePostDto);
   }
 
   @Delete('delete?')
+  @UseGuards(AuthGuard)
   async remove(@Query('posts_id') posts_id:number,@Query('user_id') user_id:number) {
     return this.likePostsService.remove(posts_id,user_id);
   }

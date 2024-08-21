@@ -29,11 +29,13 @@ export class CommentController {
   }
 
   @Put('/update/:id')
+  @UseGuards(AuthGuard)
   udpate(@Param('id') id:number,updateCommentDto:UpdateCommentDto) {
     return this.commentService.update(+id,updateCommentDto);
   }
 
   @Delete('/delete/:id')
+  @UseGuards(AuthGuard)
   remove(@Param('id') id:number) {
     return this.commentService.remove(+id);
   }

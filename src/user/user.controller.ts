@@ -15,12 +15,13 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
-  findAll():Promise<User[]> {
-    return this.userService.findAll();
-  }
+  // @Get()
+  // findAll():Promise<User[]> {
+  //   return this.userService.findAll();
+  // }
 
   @Get('/check-online/:id')
+  @UseGuards(AuthGuard)
   checkOnline(@Param('id') id:number):Promise<any> {
     return this.userService.checkOnline(id);
   }
@@ -44,11 +45,13 @@ export class UserController {
   }
 
   @Patch('update/:id')
+  @UseGuards(AuthGuard)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto):Promise<User|null> {
     return this.userService.update(+id, updateUserDto);
   }
 
   @Delete('delete/:id')
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string):Promise<void> {
     return this.userService.remove(+id);
   }
