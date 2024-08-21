@@ -10,7 +10,6 @@ export class PasswordController {
   constructor(private readonly passwordService: PasswordService) { }
 
   @Post('/send-mail')
-  @UseGuards(AuthGuard)
   async sendMailResetPassword(@Body() body: any) {
     return this.passwordService.sendMailResetPassword(body);
   }
@@ -22,7 +21,6 @@ export class PasswordController {
   }
 
   @Post('/reset-password')
-  @UseGuards(AuthGuard)
   async resetPassword(@Body() body:UpdateCommentDto) {
     return this.passwordService.resetPassword(body);
   }
