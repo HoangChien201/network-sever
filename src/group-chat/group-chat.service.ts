@@ -16,7 +16,9 @@ export class GroupChatService {
     @InjectRepository(GroupChat)
     private readonly groupRepository: Repository<GroupChat>,
     @InjectRepository(GroupMember)
-    private readonly groupMemberRepository: Repository<GroupMember>
+    private readonly groupMemberRepository: Repository<GroupMember>,
+    @InjectRepository(Message)
+    private readonly messageRepository: Repository<Message>,
   ) { }
 
   async create(createDto: CreateGroupChatDto) {
@@ -119,7 +121,7 @@ export class GroupChatService {
     }
   }
 
-  private async CreateGroup(createDto: CreateGroupChatDto) {
+  private async CreateGroup(req:Request,createDto: CreateGroupChatDto) {
     const { members, ...createGroup } = createDto
 
     if (!createGroup.image) {
