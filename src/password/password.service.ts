@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { MailerService } from '@nestjs-modules/mailer';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
@@ -14,46 +13,45 @@ export class PasswordService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    private readonly mailerService: MailerService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>
   ) { }
 
   async sendMailResetPassword(body: any): Promise<any> {
 
-    const code = Math.floor(Math.random() * (99999-10000)) + 10000
-    const token = await this.jwtService.signAsync({ code: code })
-    this.mailerService
-      .sendMail({
-        to: body.to, // list of receivers
-        from: 'noreply@netforge.com', // sender address
-        subject: `Mã của bạn - ${code}`, // Subject line
-        html: `
-            <div>
-                Xin chào
-                <br>
-                <br>
-                    Mã của bạn là: ${code}. Sử dụng nó để xác thực lấy lại mật khẩu của bạn.<br>
-                <br>
-                    Nếu bạn không yêu cầu điều này, vui lòng bỏ qua tin nhắn này.<br>
-                <br>
-                Trân trọng,
-                <br>
-                Đội ngũ NetForge
-                <div>
-                    <br>
-                </div>
-            </div>`, // HTML body content
-      })
-      .then(() => {
+    // const code = Math.floor(Math.random() * (99999-10000)) + 10000
+    // const token = await this.jwtService.signAsync({ code: code })
+    // this.mailerService
+    //   .sendMail({
+    //     to: body.to, // list of receivers
+    //     from: 'noreply@netforge.com', // sender address
+    //     subject: `Mã của bạn - ${code}`, // Subject line
+    //     html: `
+    //         <div>
+    //             Xin chào
+    //             <br>
+    //             <br>
+    //                 Mã của bạn là: ${code}. Sử dụng nó để xác thực lấy lại mật khẩu của bạn.<br>
+    //             <br>
+    //                 Nếu bạn không yêu cầu điều này, vui lòng bỏ qua tin nhắn này.<br>
+    //             <br>
+    //             Trân trọng,
+    //             <br>
+    //             Đội ngũ NetForge
+    //             <div>
+    //                 <br>
+    //             </div>
+    //         </div>`, // HTML body content
+    //   })
+    //   .then(() => {
 
-        console.log("send mail ok");
-      })
-      .catch((error) => {
-        console.log("send mail not ok" + error);
-      });
+    //     console.log("send mail ok");
+    //   })
+    //   .catch((error) => {
+    //     console.log("send mail not ok" + error);
+    //   });
 
-    return { token: token }
+    // return { token: token }
 
   }
 
