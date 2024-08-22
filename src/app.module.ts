@@ -70,7 +70,7 @@ import { join } from 'path';
     MediaModule,
     TagPostsModule,
     SocketModule,
-    // PasswordModule,
+    PasswordModule,
     LikeMessageModule,
     MessageReadModule,
 

@@ -7,51 +7,57 @@ import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class PasswordService {
+  private transporter;
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
-  ) { }
+    private readonly userRepository: Repository<User>,
+    
+  ) {
+    this.transporter = nodemailer.createTransport({
+      service: 'gmail', // hoặc bất kỳ service nào bạn sử dụng
+      auth: {
+        user: process.env.MAILDEV_INCOMING_USER,
+        pass: process.env.MAILDEV_INCOMING_PASS,
+      },
+    });
+   }
 
   async sendMailResetPassword(body: any): Promise<any> {
+    const code = Math.floor(Math.random() * (99999-10000)) + 10000
+    const token = await this.jwtService.signAsync({ code: code })
 
-    // const code = Math.floor(Math.random() * (99999-10000)) + 10000
-    // const token = await this.jwtService.signAsync({ code: code })
-    // this.mailerService
-    //   .sendMail({
-    //     to: body.to, // list of receivers
-    //     from: 'noreply@netforge.com', // sender address
-    //     subject: `Mã của bạn - ${code}`, // Subject line
-    //     html: `
-    //         <div>
-    //             Xin chào
-    //             <br>
-    //             <br>
-    //                 Mã của bạn là: ${code}. Sử dụng nó để xác thực lấy lại mật khẩu của bạn.<br>
-    //             <br>
-    //                 Nếu bạn không yêu cầu điều này, vui lòng bỏ qua tin nhắn này.<br>
-    //             <br>
-    //             Trân trọng,
-    //             <br>
-    //             Đội ngũ NetForge
-    //             <div>
-    //                 <br>
-    //             </div>
-    //         </div>`, // HTML body content
-    //   })
-    //   .then(() => {
-
-    //     console.log("send mail ok");
-    //   })
-    //   .catch((error) => {
-    //     console.log("send mail not ok" + error);
-    //   });
-
-    // return { token: token }
+    const mailOptions = {
+      from: 'Netfore', // sender address
+      to:body.to,
+      subject:`Mã của bạn - ${code}`,
+      html:`
+            <div>
+                Xin chào
+                <br>
+                <br>
+                    Mã của bạn là: ${code}. Sử dụng nó để xác thực lấy lại mật khẩu của bạn.<br>
+                <br>
+                    Nếu bạn không yêu cầu điều này, vui lòng bỏ qua tin nhắn này.<br>
+                <br>
+                Trân trọng,
+                <br>
+                Đội ngũ NetForge
+                <div>
+                    <br>
+                </div>
+            </div>`,
+    };
+    this.transporter.sendMail(mailOptions)
+    .then(()=>{
+    })
+    
+    return {token};
 
   }
 
