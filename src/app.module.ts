@@ -29,8 +29,6 @@ import { GroupChat } from './group-chat/entities/group-chat.entity';
 import { Message } from './message/entities/message.entity';
 import { Friendship } from './friendship/entities/friendship.entity';
 import { SocketModule } from './socket/socket.module';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { PasswordModule } from './password/password.module';
 import { LikeMessageModule } from './like-message/like-message.module';
 import { LikeMessage } from './like-message/entities/like-message.entity';
@@ -56,29 +54,6 @@ import { join } from 'path';
       synchronize: false,
       autoLoadEntities: true,
       timezone:'+07:00'
-    }),
-    MailerModule.forRoot({
-      transport: {
-        host: 'smtp.gmail.com',
-        port: 587,
-        ignoreTLS: false,
-        secure: false,
-        auth: {
-          user: process.env.MAILDEV_INCOMING_USER,
-          pass: process.env.MAILDEV_INCOMING_PASS
-        },
-      },
-      defaults: {
-        from: '"No Reply" <no-reply@localhost>',
-      },
-      preview: false,
-      template: {
-        dir: process.cwd() + '/template/',
-        adapter: new HandlebarsAdapter(),
-        options: {
-          strict: true,
-        },
-      },
     }),
     FriendshipModule,
     UserModule,

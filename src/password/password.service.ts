@@ -1,34 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { MailerService } from '@nestjs-modules/mailer';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class PasswordService {
+  private transporter;
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    private readonly mailerService: MailerService,
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
-  ) { }
+    private readonly userRepository: Repository<User>,
+    
+  ) {
+    this.transporter = nodemailer.createTransport({
+      service: 'gmail', // hoặc bất kỳ service nào bạn sử dụng
+      auth: {
+        user: process.env.MAILDEV_INCOMING_USER,
+        pass: process.env.MAILDEV_INCOMING_PASS,
+      },
+    });
+   }
 
   async sendMailResetPassword(body: any): Promise<any> {
-
     const code = Math.floor(Math.random() * (99999-10000)) + 10000
     const token = await this.jwtService.signAsync({ code: code })
-    this.mailerService
-      .sendMail({
-        to: body.to, // list of receivers
-        from: 'noreply@netforge.com', // sender address
-        subject: `Mã của bạn - ${code}`, // Subject line
-        html: `
+
+    const mailOptions = {
+      from: 'Netfore', // sender address
+      to:body.to,
+      subject:`Mã của bạn - ${code}`,
+      html:`
             <div>
                 Xin chào
                 <br>
@@ -43,17 +51,13 @@ export class PasswordService {
                 <div>
                     <br>
                 </div>
-            </div>`, // HTML body content
-      })
-      .then(() => {
-
-        console.log("send mail ok");
-      })
-      .catch((error) => {
-        console.log("send mail not ok" + error);
-      });
-
-    return { token: token }
+            </div>`,
+    };
+    this.transporter.sendMail(mailOptions)
+    .then(()=>{
+    })
+    
+    return {token};
 
   }
 
