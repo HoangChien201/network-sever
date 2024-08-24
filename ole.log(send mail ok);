@@ -1,0 +1,554 @@
+[33mcommit 116cb6c9ae8a8419966d5dfe9b2afc0f23fa9ea5[m[33m ([m[1;36mHEAD -> [m[1;32mdev[m[33m, [m[1;31morigin/main[m[33m)[m
+Merge: c47ef19 35bbb1c
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Fri Aug 23 01:55:26 2024 +0700
+
+    Merge pull request #13 from HoangChien201/dev
+    
+    Dev
+
+[33mcommit 35bbb1c1772b9eaac3546681b28507152ae63ef9[m[33m ([m[1;31morigin/dev[m[33m)[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Fri Aug 23 01:54:56 2024 +0700
+
+    upgrage mail
+
+[33mcommit c47ef19e5e219105bc35dfad5abd66a24b8eef39[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Aug 22 23:17:49 2024 +0700
+
+    Delete .env
+
+[33mcommit 11fa09f658ebd8804a9e5819e2badeb5ab923dc2[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Aug 22 23:12:00 2024 +0700
+
+    Update npm packages to fix vulnerabilities
+
+[33mcommit 6eb68725dbcd719f6c9f228eb9a8f0c65d01a9cb[m[33m ([m[1;32mmain[m[33m)[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Aug 22 01:08:41 2024 +0700
+
+    fix token
+
+[33mcommit 5118b7fd342400884323454e5e36396f5c3fbb4e[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Wed Aug 21 23:33:49 2024 +0700
+
+    fix
+
+[33mcommit 5dd9855e2e75b4f5fcfb8aea0c0c7ddc8c0a61e4[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Wed Aug 21 23:29:29 2024 +0700
+
+    change cloudinary
+
+[33mcommit c556198c154b5bc63501bb2c2a72a1fd9b0e43ce[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Wed Aug 21 17:50:20 2024 +0700
+
+    change type id message, create page html deeplink
+
+[33mcommit 3e0f4f76e75ef93a745b043d569ed61770e1014c[m[33m ([m[1;31morigin/vps[m[33m)[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Wed Aug 21 09:52:39 2024 +0700
+
+    authguard
+
+[33mcommit 753538bcd6ddc2059462915e51f3fe739c2c32c4[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Fri Aug 16 19:02:31 2024 +0700
+
+    commit assetlink
+
+[33mcommit f4d2ea3029072469d09261e12eb1ea9b25d7b869[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Aug 15 00:08:42 2024 +0700
+
+    fix heelo
+
+[33mcommit d18863e4d1e0bc0f5eaa9744054764c63e190411[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Wed Aug 14 23:50:59 2024 +0700
+
+    commit deeplink
+
+[33mcommit 00e4c8caa5af4f3d2ca813707c5b1a539af203f1[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Wed Aug 14 12:45:49 2024 +0700
+
+    fix comment
+
+[33mcommit d788adc7a19ceed9b9a83e362b546ab369a95f11[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Sun Aug 11 12:25:19 2024 +0700
+
+    fix request
+
+[33mcommit bf5aa6e6a5bdac44755f0894efa0d6dd6ccc8784[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Aug 8 02:03:55 2024 +0700
+
+    fix cloundianry
+
+[33mcommit 19b0e409090ac4efe8eb29c9913324e7c1a58b43[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Tue Aug 6 02:32:40 2024 +0700
+
+    update:online
+
+[33mcommit 9f585245351ed51507b1683a5c7447e8c571dac1[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Fri Aug 2 10:38:42 2024 +0700
+
+    emotion
+
+[33mcommit f368ccf7c3009878dee06cbf2a318a585ee3c7d5[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Aug 1 23:45:10 2024 +0700
+
+    fix:background user
+
+[33mcommit d9d8a000a7b135f96a561494cdec693a02181883[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Aug 1 22:46:54 2024 +0700
+
+    fix:creact-message
+
+[33mcommit 63511eaa2383aa8e9a1b64eec0220cc45d90fded[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Wed Jul 31 23:28:36 2024 +0700
+
+    update:create message
+
+[33mcommit 97c0ef46b50016ec714ea04256da6e99879594f0[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Sun Jul 28 21:54:30 2024 +0700
+
+    fix:createpost
+
+[33mcommit 70d62164c4f1c5c1a6be56a2104b47a3ead49a11[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Sun Jul 28 18:47:01 2024 +0700
+
+    update socket qr-login, fix return create post
+
+[33mcommit 59ec28725888de5cab8cac43769e05db59cdd0c1[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Wed Jul 24 00:34:57 2024 +0700
+
+    add:emotion
+
+[33mcommit 6797b5c560422aa705c6d90b64450fd9923eed35[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jul 22 23:13:08 2024 +0700
+
+    fix:message-create
+
+[33mcommit f047634fb5235fa38513eb9ff77f3117b84c75c0[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jul 22 12:20:58 2024 +0700
+
+    fix:create messager
+
+[33mcommit 4a87776986d56c1f19f9eea1371e42df40e9781d[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jul 22 12:16:09 2024 +0700
+
+    fix:message
+
+[33mcommit 6fde5d00abd78f7846347b1b44c39afb594ac51f[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jul 22 12:08:58 2024 +0700
+
+    fix:message create
+
+[33mcommit b78f38e50c44b7d6b779a34744666dd58377e125[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 18 23:22:44 2024 +0700
+
+    fix
+
+[33mcommit d50baf284ceace8c82ac25f59a7ce6069d627322[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 18 22:41:03 2024 +0700
+
+    fix:avatar user
+
+[33mcommit 31b3a50549f734cad7c717a487fce4d8383048f3[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 18 21:17:35 2024 +0700
+
+    fix:message
+
+[33mcommit defcbe08e42881ca22534e19b403f8c4143df80b[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Wed Jul 17 14:56:09 2024 +0700
+
+    fix:group-chat
+
+[33mcommit 4ca6b91bc0e3b650ce155a853ea51eb9b33c701b[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sun Jul 14 19:20:22 2024 +0700
+
+    fix:activity
+
+[33mcommit 0c9b2ff21a8d5444fe2595d48d16e76d6ee8251a[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sat Jul 13 23:57:45 2024 +0700
+
+    fix:friend
+
+[33mcommit 47a354cab55c2c2eb30ac2f829992d66cc8fec1e[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sat Jul 13 04:56:42 2024 +0700
+
+    fix:background
+
+[33mcommit 4d07117868dd3f4b67e89fed6b02dbf16e3eb844[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sat Jul 13 03:05:32 2024 +0700
+
+    update group-chat
+
+[33mcommit 871059c0e426400d161f9bd24c9f02b4b304d4ac[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 11 23:36:44 2024 +0700
+
+    fix:comment
+
+[33mcommit 31fcb63176ad9b4b9c5901b0c6cca77f0e681528[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 11 23:23:14 2024 +0700
+
+    fix:like-comment
+
+[33mcommit 36b153fb56f6c9e1bfd41f07cc622fa180996a12[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 11 23:13:32 2024 +0700
+
+    fix:history
+
+[33mcommit e9e4497ef9da7318b1d3355fd16778264bab2461[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 11 22:30:25 2024 +0700
+
+    fix:userbackgorund
+
+[33mcommit c723d91e2008787004924eae6f03e7a904d143cf[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 11 22:21:59 2024 +0700
+
+    fix:user
+
+[33mcommit e57939fc7dab138bb17521f58d45cb4adf252af7[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 11 20:53:27 2024 +0700
+
+    fix:friendship
+
+[33mcommit 8f916fe123375e7f4554ce55b4ddc9a22ed693bb[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 11 19:10:04 2024 +0700
+
+    fix:friendship
+
+[33mcommit f0f3bfc7c500b7e69179af1843ae04345a761727[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jul 11 00:36:52 2024 +0700
+
+    fix:friendship
+
+[33mcommit 872c15387da209d0c7210e181c02060222cca9d8[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Wed Jul 10 01:26:11 2024 +0700
+
+    fix:message
+
+[33mcommit abb87f81bae743ec6377014124ae346ee44c514b[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Tue Jul 9 23:42:09 2024 +0700
+
+    fix:add comment
+
+[33mcommit 2289d5dcae7788b83d5e5541bdbbe7cde0765e22[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Tue Jul 9 13:11:04 2024 +0700
+
+    fix:comment
+
+[33mcommit a429fe8b69d8f508c27bdfcf8859e9493ce66d0f[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jul 8 11:43:18 2024 +0700
+
+    fix:comment
+
+[33mcommit aef5404079b492106b8d5662e737e02203ef409f[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jul 8 11:26:54 2024 +0700
+
+    fix:like-comment
+
+[33mcommit 4a7b69ab5625ddc717b57d5524449375fb5f7579[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Wed Jul 3 22:38:17 2024 +0700
+
+    fix comment
+
+[33mcommit ac9f0dfe9b4c1310ca377feb94436b25a2f6a484[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Wed Jul 3 01:46:43 2024 +0700
+
+    fix:socket
+
+[33mcommit 00e9ffca4ab86c78f717e0426b4663eff40d5d6d[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Tue Jul 2 22:34:35 2024 +0700
+
+    fix:post
+
+[33mcommit 579bc9ced5cbfb2e0b3bd370415ee820f853e44f[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Tue Jul 2 19:51:18 2024 +0700
+
+    fix:message, group chat
+
+[33mcommit fabfe117afcbde854d68e3d824e0808bff6e373f[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jul 1 23:24:12 2024 +0700
+
+    fix:socket
+
+[33mcommit 2c5661e8a359924453b17c4d144ca89d6e5ab73f[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jul 1 21:12:10 2024 +0700
+
+    fix:post
+
+[33mcommit b8d489a6207ee777f1b0576071f64230d8f36c0c[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sun Jun 30 23:54:32 2024 +0700
+
+    fix:group-chat
+
+[33mcommit 4762b1c070c6b8246dbac7969c448af87b6ba2ba[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sun Jun 30 23:44:01 2024 +0700
+
+    fix-group chat
+
+[33mcommit 82b2563354bcddd31e48b4c71f915cc500f91923[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sun Jun 30 23:37:52 2024 +0700
+
+    fix:group-chat
+
+[33mcommit 772eb73ff6e7065a65f44d0f0f3ff7bb9ac7ba08[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sun Jun 30 23:04:01 2024 +0700
+
+    fix:socket message read
+
+[33mcommit 339ea9d84fda4eafcd8c61340b56fe435a8871d7[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sun Jun 30 14:30:55 2024 +0700
+
+    message-read
+
+[33mcommit f59fba9e3cb3854d5863b98d5df1f9579de4031c[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sun Jun 30 03:29:47 2024 +0700
+
+    create:message_read
+
+[33mcommit 778ced350cc5a3778d41b691ba6fe357cabfccd3[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sat Jun 29 17:04:25 2024 +0700
+
+    fix:message
+
+[33mcommit 39561e6c035e2dea221c38f655a1c93cafe4e632[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sat Jun 29 15:56:51 2024 +0700
+
+    fix:group-chat
+
+[33mcommit 11bd75d2cef4d6fc2c1b6e7999284cdf0811e933[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sat Jun 29 13:23:02 2024 +0700
+
+    fix:socket
+
+[33mcommit ec485dd55fcfc3a87b979646ac4705919dee118b[m
+Merge: 693426a 151318f
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Fri Jun 28 20:58:57 2024 +0700
+
+    fix:group-chat
+
+[33mcommit 693426af801b0d11f5ef427eb7c0d8b0b2ba7588[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Fri Jun 28 20:57:27 2024 +0700
+
+    fix:group-hcat
+
+[33mcommit 151318f1533545f00f251ee086b6054c89657fac[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Fri Jun 28 00:02:04 2024 +0700
+
+    Update socket.gateway.ts
+
+[33mcommit b05bc2b9473c713dde18c53120fc4beafa4a7401[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Jun 27 23:39:06 2024 +0700
+
+    Update socket.module.ts
+
+[33mcommit 4f97fec9b9fec518b538b4af29807a7128934b0e[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Jun 27 23:36:26 2024 +0700
+
+    Update socket.gateway.ts
+
+[33mcommit e0c612e4e2f040dbb54823b225856ddee60e8d42[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jun 27 23:34:27 2024 +0700
+
+    fix:socket
+
+[33mcommit e3df52e8daf0070a67360b09fe1706c7e8e580c1[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jun 27 23:30:30 2024 +0700
+
+    fix:socket
+
+[33mcommit aa95edaaeb2161aa15af7b3d02f358210fd9107f[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jun 27 23:06:40 2024 +0700
+
+    updade:socket message,notification
+
+[33mcommit 2a3731625ae6f1575220d0bd84620b1cbcf1fce6[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Wed Jun 26 02:49:53 2024 +0700
+
+    fix:like-comment, delete post,share posts
+
+[33mcommit d24fd6e08af930401ca56011a72c8a193226d022[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Tue Jun 25 18:32:57 2024 +0700
+
+    fix:like comment
+
+[33mcommit 242ee99e21b9ede0e95453f1da0f6816bbd67884[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Tue Jun 25 12:31:58 2024 +0700
+
+    fix: likecomment
+
+[33mcommit 89b64b6971c6c629ade970d3265cc16fa5d9d235[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Tue Jun 25 12:28:32 2024 +0700
+
+    fix like-comment
+
+[33mcommit ca47327eb3cfb279949c9c929549706db898eac8[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jun 24 21:43:13 2024 +0700
+
+    fix:delete post
+
+[33mcommit 1932a59e6794f544b3fb33bc4cf083cb9e901a4d[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Mon Jun 24 20:57:46 2024 +0700
+
+    fix:delete posts
+
+[33mcommit 6ff59b635d5fb4571289c7f85937f09b14b3d570[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Sat Jun 22 00:01:27 2024 +0700
+
+    fix:posts find one
+
+[33mcommit 200cd7171bc4e540c69ecd7cbf68a6cda9d903b8[m
+Merge: 913b223 85210ae
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jun 20 12:01:43 2024 +0700
+
+    Merge branch 'main' of https://github.com/HoangChien201/event-sever
+
+[33mcommit 913b2230c4ece9c1a30dd5e0a544d76abd9e2893[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jun 20 12:01:18 2024 +0700
+
+    update message
+
+[33mcommit 85210ae49cc5ff7634a4bdd6be9e63c984ba5e93[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Jun 20 11:58:16 2024 +0700
+
+    Update group-chat.controller.ts
+
+[33mcommit 11b2eb0e9b7b95f8ec496d3c4b2d0074d5eda08d[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Jun 20 11:56:29 2024 +0700
+
+    Update group-chat.service.ts
+
+[33mcommit fbcf4461f9af863bd78192b653b856f91fedc392[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jun 20 11:55:47 2024 +0700
+
+    g
+
+[33mcommit 6886fcefcf1bf3245ab363019e25ec930d87a6e9[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Jun 20 11:45:24 2024 +0700
+
+    Update group-chat.service.ts
+
+[33mcommit 218282d158817cf2c1622e32b79477833330af76[m
+Author: Hoang Chien <130383912+HoangChien201@users.noreply.github.com>
+Date:   Thu Jun 20 11:31:23 2024 +0700
+
+    Update group-chat.service.ts
+
+[33mcommit 5533b66e29ac71da627fb3f47ef5b88cd2d08e1d[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jun 20 10:49:30 2024 +0700
+
+    fix:group-chat
+
+[33mcommit 38398a72c25723e0fb7051c628c468c59ea4cc9b[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Wed Jun 19 02:24:40 2024 +0700
+
+    update:change-password
+
+[33mcommit cf80539f53756f5bf3b50706be3cbbd7c6e20250[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Tue Jun 18 20:34:07 2024 +0700
+
+    fix:reset password
+
+[33mcommit 0db172d95dee0924978cd02a55b1aa89c4d0a262[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Fri Jun 14 23:58:05 2024 +0700
+
+    create:reset password
+
+[33mcommit db0b609c1eec7e921ac0f8eb0d1d5dce448031f2[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Fri Jun 14 23:15:10 2024 +0700
+
+    update comment
+
+[33mcommit e02f1fea7cd045ae16cba85559b8b444cc123f75[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Fri Jun 14 21:58:36 2024 +0700
+
+    update friend-ship
+
+[33mcommit fe7be46c393af3dcb33dfbed9d3b44514f89ca51[m
+Author: HoangChien201 <hoangchien11522@gmail.com>
+Date:   Thu Jun 13 22:39:45
