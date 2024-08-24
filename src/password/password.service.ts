@@ -32,9 +32,20 @@ export class PasswordService {
     const code = Math.floor(Math.random() * (99999-10000)) + 10000
     const token = await this.jwtService.signAsync({ code: code })
 
+    const {to:email} = body
+
+    const user = await this.userRepository.findOne({where:{email}})
+    
+    if(!user){
+      return {
+        status:-1,
+        message:"Email không tồn tại !"
+      };
+    }
+
     const mailOptions = {
       from: 'Netfore', // sender address
-      to:body.to,
+      to:email,
       subject:`Mã của bạn - ${code}`,
       html:`
             <div>
@@ -57,7 +68,10 @@ export class PasswordService {
     .then(()=>{
     })
     
-    return {token};
+    return {
+      status:1,
+      token
+    };;
 
   }
 
