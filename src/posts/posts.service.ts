@@ -126,7 +126,6 @@ export class PostsService {
 
       const postsQuery = await this.postsRepository.
         createQueryBuilder('p')
-        .select()
         .where({
           creater: user_id,
         })
@@ -156,7 +155,6 @@ export class PostsService {
         .addSelect(['user.fullname'])
 
         .orderBy('p.create_at', 'DESC')
-        .limit(5)
         .getMany()
 
         if(postsQuery.length <=0) return []
@@ -478,7 +476,6 @@ export class PostsService {
         .leftJoin('tags.user', 'user')
         .addSelect(['user.fullname', 'tags.user'])
         .orderBy('p.create_at', 'DESC')
-        .limit(10)
         .getMany()
 
         //get id posts
