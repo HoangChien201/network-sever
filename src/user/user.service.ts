@@ -8,6 +8,9 @@ import * as bcrypt from 'bcrypt';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { Friendship } from 'src/friendship/entities/friendship.entity';
 import { Request } from 'express';
+import { LikeComment } from 'src/like-comment/entities/like-comment.entity';
+import { LikePost } from 'src/like-posts/entities/like-post.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
 
 @Injectable()
 export class UserService {
@@ -15,7 +18,11 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Friendship)
-    private readonly friendShipRepository: Repository<Friendship>
+    private readonly friendShipRepository: Repository<Friendship>,
+    @InjectRepository(LikeComment)
+    private readonly likeCommentRepository: Repository<LikeComment>,
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>
   ) { }
   async create(createUserDto: CreateUserDto): Promise<User> {
     const saltOrRounds = parseInt(process.env.SALTORROUNDS)
@@ -39,9 +46,6 @@ export class UserService {
     return await this.userRepository.save(createUserDto);
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
-  }
 
   async findOne(user_id: number, request: Request): Promise<User | null> {
     //get id of user request
@@ -81,42 +85,51 @@ export class UserService {
       //get user from token
       const user_id = request.headers[USER_ID_HEADER_NAME];
 
-      const historyLikes = await this.userRepository
+      const history = await this.userRepository
         .createQueryBuilder('u')
+        .select()
         //joinlikePost
         .leftJoin('u.likePosts', 'lp')
         .addSelect(['lp.reaction', 'lp.create_at', 'lp.update_at'])
         .orderBy('lp.create_at','DESC')
-
-        //joinPost
+        // //joinPost
         .leftJoinAndSelect('lp.posts', 'posts')
         .leftJoin('posts.creater', 'creater')
         .addSelect(['creater.fullname', 'creater.id'])
         .orderBy('posts.create_at','DESC')
+        .where({
+          id: user_id
+        })
+        .limit(5)
+        .getOne()
 
 
-        //join like comment
-        .leftJoinAndSelect('u.likeComments', 'lc')
+        // //join like comment
+        const historyLikeComments = await this.likeCommentRepository
+        .createQueryBuilder('lc')
         .leftJoin('lc.user', 'uLikeC')
         .addSelect(['uLikeC.fullname', 'uLikeC.id'])
         .orderBy('lc.create_at','DESC')
+        .where(`uLikeC.id = ${user_id}`)
+        .limit(5)
+        .getMany()
 
-        //join comment
-        .leftJoinAndSelect('u.comments', 'comment')
+        // //join comment
+        const historyComments = await this.commentRepository
+        .createQueryBuilder('comment')
         .leftJoinAndSelect('comment.posts', 'pComment')
         .leftJoin('pComment.creater', 'pComment_Creater')
         .addSelect(['pComment_Creater.fullname', 'pComment_Creater.id'])
         .orderBy('comment.create_at','DESC')
+        .where(`pComment_Creater.id = ${user_id}`)
+        .limit(5)
+        .getMany()
 
-        .where({
-          id: user_id
-        })
-        
-        .getOne()
-
-      historyLikes.password = undefined
-
-      return historyLikes;
+      history.password = undefined
+      history.likeComments=historyLikeComments
+      history.comments=historyComments
+      
+      return history;
     } catch (error) {
       return {
         status: -1,
