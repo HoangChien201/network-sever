@@ -156,6 +156,7 @@ export class PostsService {
         .addSelect(['user.fullname'])
 
         .orderBy('p.create_at', 'DESC')
+        .limit(5)
         .getMany()
 
         if(postsQuery.length <=0) return []
@@ -169,6 +170,7 @@ export class PostsService {
               .select('c.posts', 'posts_id')
               .addSelect('COUNT(c.posts)', 'comment_count')
               .from(Comment, 'c')
+              .where('c.status = 1')
               .groupBy('c.posts')
           ,
           'c',
@@ -272,6 +274,7 @@ export class PostsService {
               .select('c.posts', 'posts_id')
               .addSelect('COUNT(c.posts)', 'comment_count')
               .from(Comment, 'c')
+              .where('c.status = 1')
               .groupBy('c.posts')
           ,
           'c',
@@ -363,6 +366,7 @@ export class PostsService {
               .select('c.posts', 'posts_id')
               .addSelect('COUNT(c.posts)', 'comment_count')
               .from(Comment, 'c')
+              .where('c.status = 1')
               .groupBy('c.posts')
           ,
           'c',
@@ -474,6 +478,7 @@ export class PostsService {
         .leftJoin('tags.user', 'user')
         .addSelect(['user.fullname', 'tags.user'])
         .orderBy('p.create_at', 'DESC')
+        .limit(10)
         .getMany()
 
         //get id posts
@@ -488,6 +493,7 @@ export class PostsService {
               .select('c.posts', 'posts_id')
               .addSelect('COUNT(c.posts)', 'comment_count')
               .from(Comment, 'c')
+              .where('c.status = 1')
               .groupBy('c.posts')
           ,
           'c',
@@ -577,6 +583,7 @@ export class PostsService {
             .select('c.posts', 'posts_id')
             .addSelect('COUNT(c.posts)', 'comment_count')
             .from(Comment, 'c')
+            .where('c.status = 1')
             .groupBy('c.posts')
         ,
         'c',
