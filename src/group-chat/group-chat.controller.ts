@@ -12,8 +12,8 @@ export class GroupChatController {
 
   @Post()
   @UseGuards(AuthGuard)
-  create(@Body() createGroupChatDto: CreateGroupChatDto) {
-    return this.groupChatService.create(createGroupChatDto);
+  create(@Body() createGroupChatDto: CreateGroupChatDto,@Req() req:Request) {
+    return this.groupChatService.create(createGroupChatDto,req);
   }
 
   @Get('/get-by-user')

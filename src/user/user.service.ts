@@ -73,6 +73,8 @@ export class UserService {
     const statusFriend = this.FilterStatusFriend(parseInt(user_req.toString()), friendOfUser)
 
     userQuery['relationship'] = statusFriend
+    userQuery['password'] = undefined
+
     return userQuery
   }
 

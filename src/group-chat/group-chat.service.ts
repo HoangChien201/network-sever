@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import { USER_ID_HEADER_NAME } from 'src/auth/constant';
 import { Message } from 'src/message/entities/message.entity';
 import { GroupMember } from 'src/group-member/entities/group-member.entity';
-import { MessageService } from 'src/message/message.service';
 import { Request } from 'express';
 
 @Injectable()
@@ -21,14 +20,14 @@ export class GroupChatService {
     private readonly messageRepository: Repository<Message>,
   ) { }
 
-  async create(createDto: CreateGroupChatDto) {
+  async create(createDto: CreateGroupChatDto,req:Request) {
     try {
       const groupExist = await this.CheckGroupExist(createDto)
       if (groupExist && createDto.type === 'single') {
         return groupExist
       }
-
-      return await this.CreateGroup(createDto)
+      
+      return await this.CreateGroup(createDto,req)
 
 
     } catch (error) {
@@ -121,14 +120,27 @@ export class GroupChatService {
     }
   }
 
-  private async CreateGroup(createDto: CreateGroupChatDto) {
+  private async CreateGroup(createDto: CreateGroupChatDto,req:Request) {
     const { members, ...createGroup } = createDto
+    const user_req=req.headers[USER_ID_HEADER_NAME]
 
     if (!createGroup.image) {
       createGroup.image = "http://res.cloudinary.com/delivery-food/image/upload/v1717925637/oqbqmqtswalnlfrmhayn.png"
     }
     const groupSave = await this.groupRepository.save(createGroup);
     
+    //tạo tin nhắn khi tạo group
+    if(groupSave.type==='group'){
+      await this.messageRepository.save({
+        id:`${user_req}${Date.now()}`,
+        message:"Xin chào",
+        type:"text",
+        sender:parseInt(user_req.toString()),
+        group:groupSave.id,
+        state:1
+      })
+    }
+
     if (members) {
       const memberne=await this.groupMemberRepository.createQueryBuilder()
       .insert()
