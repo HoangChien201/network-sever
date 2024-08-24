@@ -165,9 +165,30 @@ export class FriendshipService {
         return [f.user1, f.user2]
       }).flat()
 
+
+      // lấy danh sách đã yêu cầu của user   
+      const userRequestedFriend = await this.friendShipRepository
+        .createQueryBuilder('f')
+        .where({
+          status: STATUS_REQUEST_FRIENDED,
+          user1: user_req
+        })
+        .orWhere({
+          status: STATUS_REQUEST_FRIENDED,
+          user2: user_req
+        }).getMany()
+
+       //lọc id yêu cầu của user
+      const idUserRequestedFriend = userRequestedFriend.map(f => {
+        if (f.user1 === parseInt(user_req.toString())) {
+          return f.user2
+        }
+        return f.user1
+      }) 
+
       //lọc id khác với id bạn bè của user
       const idUserCommned = [...new Set(idfriendOfFriendUsers)].filter(id => {
-        return !idfriendOfUsers.includes(id)
+        return !idfriendOfUsers.includes(id) && !idUserRequestedFriend.includes(id)
       })
 
       const userCommend = await this.userRepository.
