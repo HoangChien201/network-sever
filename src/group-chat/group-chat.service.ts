@@ -20,14 +20,14 @@ export class GroupChatService {
     private readonly messageRepository: Repository<Message>,
   ) { }
 
-  async create(createDto: CreateGroupChatDto,req:Request) {
+  async create(createDto: CreateGroupChatDto, req: Request) {
     try {
       const groupExist = await this.CheckGroupExist(createDto)
       if (groupExist && createDto.type === 'single') {
         return groupExist
       }
-      
-      return await this.CreateGroup(createDto,req)
+
+      return await this.CreateGroup(createDto, req)
 
 
     } catch (error) {
@@ -36,44 +36,57 @@ export class GroupChatService {
     }
   }
 
-  async findByUser(req: Request) {
+  async findByUser(req: Request, limit: number) {
     try {
       const user_req = req.headers[USER_ID_HEADER_NAME]
+      // const groups = await this.groupRepository
+      //   .createQueryBuilder('g')
+      //   .innerJoin('g.members', 'member')
+      //   .addSelect('member.user')
+
+      //   //member
+      //   .innerJoin('member.user', 'user')
+      //   .addSelect(['user.id', 'user.fullname', 'user.avatar'])
+
+      //   //message
+      //   .innerJoinAndSelect('g.messages', 'm')
+      //   .leftJoin('m.group', 'gm')
+      //   .addSelect('gm.id')
+
+      //   .leftJoin('m.parent', 'p')
+      //   .addSelect(['p.id'])
+      //   .leftJoin('p.sender', 'p_sender')
+      //   .addSelect(['p_sender.id', 'p_sender.fullname', 'p_sender.avatar'])
+
+      //   .leftJoin('m.sender', 'sender')
+      //   .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
+
+      //   .leftJoin('m.reactions', 'reactions')
+      //   .addSelect(['reactions.reaction', 'reactions.id', 'reactions.user'])
+      //   //người đã đọc tin nhắn
+      //   .leftJoinAndSelect('m.reads', 'read')
+      //   .leftJoin('read.user', 'user-read')
+      //   .addSelect(['user-read.avatar', 'user-read.fullname', 'user-read.id'])
+      //   .orderBy('m.create_at', 'DESC')
+
+
+
+      //   .where(`g.id IN (SELECT gc.id FROM group_chat gc 
+      // left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
+      //   .getMany()
       const groups = await this.groupRepository
-        .createQueryBuilder('g')
-        .innerJoin('g.members', 'member')
+        // //   //member
+        .createQueryBuilder('group')
+        .innerJoin('group.members', 'member')
         .addSelect('member.user')
 
-        //member
+        //   //member
         .innerJoin('member.user', 'user')
         .addSelect(['user.id', 'user.fullname', 'user.avatar'])
-
-        //message
-        .innerJoinAndSelect('g.messages', 'm')
-        .leftJoin('m.group', 'gm')
-        .addSelect('gm.id')
-
-        .leftJoin('m.parent', 'p')
-        .addSelect(['p.id'])
-        .leftJoin('p.sender', 'p_sender')
-        .addSelect(['p_sender.id', 'p_sender.fullname', 'p_sender.avatar'])
-
-        .leftJoin('m.sender', 'sender')
-        .addSelect(['sender.id', 'sender.fullname', 'sender.avatar'])
-
-        .leftJoin('m.reactions', 'reactions')
-        .addSelect(['reactions.reaction', 'reactions.id', 'reactions.user'])
-        //người đã đọc tin nhắn
-        .leftJoinAndSelect('m.reads', 'read')
-        .leftJoin('read.user', 'user-read')
-        .addSelect(['user-read.avatar', 'user-read.fullname', 'user-read.id'])
-        .orderBy('m.create_at', 'DESC')
-
-
-
-        .where(`g.id IN (SELECT gc.id FROM group_chat gc 
-      left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
-        .getMany()
+        .where(`group.id IN (SELECT gc.id FROM group_chat gc 
+          left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
+        .take(limit)
+        .getMany();
       return groups;
     } catch (error) {
       return {
@@ -120,44 +133,44 @@ export class GroupChatService {
     }
   }
 
-  private async CreateGroup(createDto: CreateGroupChatDto,req:Request) {
+  private async CreateGroup(createDto: CreateGroupChatDto, req: Request) {
     const { members, ...createGroup } = createDto
-    const user_req=req.headers[USER_ID_HEADER_NAME]
+    const user_req = req.headers[USER_ID_HEADER_NAME]
 
     if (!createGroup.image) {
       createGroup.image = "http://res.cloudinary.com/delivery-food/image/upload/v1717925637/oqbqmqtswalnlfrmhayn.png"
     }
     const groupSave = await this.groupRepository.save(createGroup);
-    
+
     //tạo tin nhắn khi tạo group
-    if(groupSave.type==='group'){
+    if (groupSave.type === 'group') {
       await this.messageRepository.save({
-        id:`${user_req}${Date.now()}`,
-        message:"Xin chào",
-        type:"text",
-        sender:parseInt(user_req.toString()),
-        group:groupSave.id,
-        state:1
+        id: `${user_req}${Date.now()}`,
+        message: "Xin chào",
+        type: "text",
+        sender: parseInt(user_req.toString()),
+        group: groupSave.id,
+        state: 1
       })
     }
 
     if (members) {
-      const memberne=await this.groupMemberRepository.createQueryBuilder()
-      .insert()
-      .into(GroupMember)
-      .values([
-        ...members.map((m) => {
-          return {
-            user: m,
-            group: groupSave.id
-          }
-        })
-      ])
-      .execute()
-      
+      const memberne = await this.groupMemberRepository.createQueryBuilder()
+        .insert()
+        .into(GroupMember)
+        .values([
+          ...members.map((m) => {
+            return {
+              user: m,
+              group: groupSave.id
+            }
+          })
+        ])
+        .execute()
+
     }
 
-    const group_respone= await this.groupRepository.createQueryBuilder('g')
+    const group_respone = await this.groupRepository.createQueryBuilder('g')
 
       .leftJoin('g.members', 'member')
       .addSelect('member.user')
@@ -168,8 +181,8 @@ export class GroupChatService {
 
       .where(`g.id = ${groupSave.id}`)
       .getOne()
-      return group_respone;
-      
+    return group_respone;
+
   }
 
   private async CheckGroupExist(createDto: CreateGroupChatDto): Promise<any> {

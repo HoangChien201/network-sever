@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Query } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -14,10 +14,10 @@ export class MessageController {
     return this.messageService.create(createMessageDto);
   }
 
-  @Get('/get-by-group/:id')
+  @Get('/get-by-group?')
   @UseGuards(AuthGuard)
-  async findByGroup(@Param('id') id:number) {
-    return this.messageService.findByGroup(+id);
+  async findByGroup(@Query('group') group:number,@Query('limit') limit:number) {
+    return this.messageService.findByGroup(+group,limit);
   }
 
   @Put('/update/:id')
