@@ -127,6 +127,7 @@ export class UserService {
         .limit(5)
         .getMany()
 
+      history.password=undefined
       history.likeComments=historyLikeComments
       history.comments=historyComments
       
