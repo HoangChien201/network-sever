@@ -36,7 +36,7 @@ export class GroupChatService {
     }
   }
 
-  async findByUser(req: Request,limit:number) {
+  async findByUser(req: Request, limit: number) {
     try {
       const user_req = req.headers[USER_ID_HEADER_NAME]
       // const groups = await this.groupRepository
@@ -77,9 +77,15 @@ export class GroupChatService {
       const groups = await this.groupRepository
         // //   //member
         .createQueryBuilder('group')
+        .innerJoin('group.members', 'member')
+        .addSelect('member.user')
+
+        //   //member
+        .innerJoin('member.user', 'user')
+        .addSelect(['user.id', 'user.fullname', 'user.avatar'])
         .where(`group.id IN (SELECT gc.id FROM group_chat gc 
           left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
-          .limit(limit)
+        .take(limit)
         .getMany();
       return groups;
     } catch (error) {
