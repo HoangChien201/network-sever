@@ -20,7 +20,7 @@ export class User {
     @Column()
     password:string;
 
-    @Column({nullable:true})
+    @Column()
     fullname:string;
 
     @Column({nullable:true})
