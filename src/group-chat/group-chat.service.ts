@@ -73,6 +73,7 @@ export class GroupChatService {
 
         .where(`g.id IN (SELECT gc.id FROM group_chat gc 
       left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
+          .take(limit)
         .getMany()
       
       return groups;
