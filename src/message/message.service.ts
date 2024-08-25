@@ -60,7 +60,7 @@ export class MessageService {
     }
   }
 
-  async findByGroup(group_id: number): Promise<Message[]> {
+  async findByGroup(group_id: number,limit:number): Promise<Message[]> {
     const messages = await this.messageReposity
       .createQueryBuilder('m')
 
@@ -86,6 +86,7 @@ export class MessageService {
         group: group_id
       })
       .orderBy('m.create_at', 'DESC')
+      .limit(limit)
       .getMany()
 
     return messages;

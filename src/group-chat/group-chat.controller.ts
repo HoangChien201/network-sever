@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Put, Query } from '@nestjs/common';
 import { GroupChatService } from './group-chat.service';
 import { CreateGroupChatDto } from './dto/create-group-chat.dto';
 import { UpdateGroupChatDto } from './dto/update-group-chat.dto';
@@ -16,10 +16,10 @@ export class GroupChatController {
     return this.groupChatService.create(createGroupChatDto,req);
   }
 
-  @Get('/get-by-user')
+  @Get('/get-by-user?')
   @UseGuards(AuthGuard)
-  async findByUser(@Req() req:Request):Promise<any> {
-    return this.groupChatService.findByUser(req);
+  async findByUser(@Req() req:Request,@Query('limit') limit:number):Promise<any> {
+    return this.groupChatService.findByUser(req,limit);
   }
 
   @Put('/update/:id')
