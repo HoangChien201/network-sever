@@ -19,8 +19,8 @@ const STATUS_SEEN = 2
 const STATUS_SEND = 1
 
 type QRLoginType = {
-    user:User;
-    QRDevice:string
+    user: User;
+    QRDevice: string
 }
 
 type MessageReadType = {
@@ -54,57 +54,66 @@ export class SocketGateWay {
     //xử lý gửi tin nhắn
     @SubscribeMessage('message')
     async handleMessage(@MessageBody() messageSK: Message): Promise<void> {
-        const memberOfGroup = await this.groupMemberRepository.find({ where: { group: typeof messageSK.group === 'number' ? messageSK.group : messageSK.group.id } })
+        try {
+            const memberOfGroup = await this.groupMemberRepository.find({ where: { group: typeof messageSK.group === 'number' ? messageSK.group : messageSK.group.id } })
 
 
-        if (!memberOfGroup) return
+            if (!memberOfGroup) return
 
-        const memberOfGroupIDs = memberOfGroup.map(m => m.user).filter((id) => {
-            const sender = typeof messageSK.sender === 'object' ? messageSK.sender.id : messageSK.sender
+            const memberOfGroupIDs = memberOfGroup.map(m => m.user).filter((id) => {
+                const sender = typeof messageSK.sender === 'object' ? messageSK.sender.id : messageSK.sender
 
-            return id !== sender
+                return id !== sender
+            }
+            )
+            if (!memberOfGroupIDs) return
+
+            memberOfGroupIDs.forEach((member) => {
+                this.sever.emit(`message-${member}`, messageSK)
+                this.sever.emit(`list-group-${member}`, messageSK)
+            })
+        } catch (error) {
+
         }
-        )
-        if (!memberOfGroupIDs) return
 
-        memberOfGroupIDs.forEach((member) => {
-            this.sever.emit(`message-${member}`, messageSK)
-            this.sever.emit(`list-group-${member}`, messageSK)
-        })
 
     }
 
     //xử lý đọc tin nhắn
     @SubscribeMessage('read-message')
     async handleReadMessage(@MessageBody() messageRead: MessageReadType): Promise<void> {
+        try {
+            const messages = await this.messageRepository
+                .createQueryBuilder('m')
+                .where({
+                    group: messageRead.group,
+                    state: STATUS_SEND
 
-        const messages = await this.messageRepository
-            .createQueryBuilder('m')
-            .where({
-                group: messageRead.group,
-                state: STATUS_SEND
-
-            })
-            .andWhere(`not m.sender=${messageRead.user}`)
-            .andWhere(`
+                })
+                .andWhere(`not m.sender=${messageRead.user}`)
+                .andWhere(`
             not m.id in (SELECT m.id FROM message m
             left join message_read mr on mr.message=m.id
             where m.groupId=${messageRead.group}
             and mr.user = ${messageRead.user}
             and not m.senderId = ${messageRead.user} and m.state = ${STATUS_SEND}
             )`)
-            .getMany()
+                .getMany()
 
-        if (!messages) return
+            if (!messages) return
 
-        messages.forEach(async (m) => {
+            messages.forEach(async (m) => {
 
-            const messageReadCreate = await this.messageReadRepository.save({
-                message: m.id,
-                user: messageRead.user
+                const messageReadCreate = await this.messageReadRepository.save({
+                    message: m.id,
+                    user: messageRead.user
+                })
+                await this.sever.emit(`read-message-${m.id}`, messageReadCreate)
             })
-            await this.sever.emit(`read-message-${m.id}`, messageReadCreate)
-        })
+        } catch (error) {
+
+        }
+
 
 
     }
@@ -112,36 +121,39 @@ export class SocketGateWay {
     //xử lý reaction tin nhắn
     @SubscribeMessage('reaction-message')
     async handleReactionMessage(@MessageBody() data: LikeMessage): Promise<void> {
-        console.log('data', data);
-        const reaction: LikeMessage = data[0]
-        const status = data[1]
+        try {
+            const reaction: LikeMessage = data[0]
+            const status = data[1]
 
-        switch (status) {
-            case 1: {
-                //create
-                const reactionCreate = await this.likeMessageRepository.save({
-                    message: reaction.message,
-                    reaction: reaction.reaction,
-                    user: reaction.user
-                })
-                console.log('reaction', reactionCreate);
+            switch (status) {
+                case 1: {
+                    //create
+                    const reactionCreate = await this.likeMessageRepository.save({
+                        message: reaction.message,
+                        reaction: reaction.reaction,
+                        user: reaction.user
+                    })
 
-                await this.sever.emit(`reaction-message-${reaction.message}`, {
-                    reaction:reaction,
-                    status:status
-                })
-                return
+                    await this.sever.emit(`reaction-message-${reaction.message}`, {
+                        reaction: reaction,
+                        status: status
+                    })
+                    return
+                }
+                case 2: {
+                    //update
+                    this.updateReaction(reaction, status)
+                    return
+                }
+                case 3: {
+                    //delete
+                    this.deleteReaction(reaction, status)
+                    return
+                }
             }
-            case 2: {
-                //update
-                this.updateReaction(reaction,status)
-                return
-            }
-            case 3: {
-                //delete
-                this.deleteReaction(reaction,status)
-                return
-            }
+
+        } catch (error) {
+            return
         }
 
 
@@ -150,88 +162,103 @@ export class SocketGateWay {
     //xử lý thông báo
     @SubscribeMessage('notification')
     async notificationHandle(@MessageBody() noti: Notification): Promise<void> {
-        const sender = noti.userInfo.sender
-        if (!noti.userInfo.multiple) {
+        try {
+            const sender = noti.userInfo.sender
+            if (!noti.userInfo.multiple) {
 
-            this.sever.emit(`notification-${noti.userInfo.receiver}`, noti)
-            return
+                this.sever.emit(`notification-${noti.userInfo.receiver}`, noti)
+                return
+            }
+
+            // // lấy danh sách bạn bè của user   
+            const friendOfUser = await this.friendShipRepository
+                .createQueryBuilder('f')
+                .where(
+                    {
+                        user2: sender,
+                        status: STATUS_FRIENDED
+                    }
+                )
+                .orWhere(
+                    {
+                        user1: sender,
+                        status: STATUS_FRIENDED
+                    }
+                )
+                .getMany()
+
+            //lọc id bạn bè của user
+            const friendIds = friendOfUser.map((f) => {
+                if (f.user1 === sender) {
+                    return f.user2
+                }
+                else {
+
+                    return f.user1
+                }
+            })
+            if (!friendIds) return
+
+            friendIds.forEach((id) => {
+                this.sever.emit(`notification-${id}`, noti)
+            })
+
+        } catch (error) {
+
         }
 
-        // // lấy danh sách bạn bè của user   
-        const friendOfUser = await this.friendShipRepository
-            .createQueryBuilder('f')
-            .where(
-                {
-                    user2: sender,
-                    status: STATUS_FRIENDED
-                }
-            )
-            .orWhere(
-                {
-                    user1: sender,
-                    status: STATUS_FRIENDED
-                }
-            )
-            .getMany()
+    }
 
-        //lọc id bạn bè của user
-        const friendIds = friendOfUser.map((f) => {
-            if (f.user1 === sender) {
-                return f.user2
-            }
-            else {
+    //xử lý quét QRLogin
+    @SubscribeMessage('qr-login')
+    async QRLogin(@MessageBody() bodyQRLogin: QRLoginType): Promise<void> {
+        try {
+            const { QRDevice, user } = bodyQRLogin;
+            if (!bodyQRLogin.user) return
 
-                return f.user1
-            }
-        })
-        if (!friendIds) return
+            this.sever.emit(`qr-login-${QRDevice}`, user)
+        } catch (error) {
 
-        friendIds.forEach((id) => {
-            this.sever.emit(`notification-${id}`, noti)
-        })
+        }
 
     }
 
-     //xử lý quét QRLogin
-     @SubscribeMessage('qr-login')
-     async QRLogin(@MessageBody() bodyQRLogin: QRLoginType): Promise<void> {
-        const {QRDevice,user}=bodyQRLogin;
-        if(!bodyQRLogin.user) return
-
-        this.sever.emit(`qr-login-${QRDevice}`,user)
-     }
-
-    private async updateReaction(reaction: LikeMessage,status:number) {
-        const reactionQuery = await this.likeMessageRepository.findOne({
-            where: {
-                user: reaction.user,
-                message: reaction.message
-            }
-        })
-
-        const reactionUpdate = await this.likeMessageRepository.save({
-            ...reactionQuery,
-            reaction: reaction.reaction
-        })
-
-        if (!reactionUpdate) return
-
-        await this.sever.emit(`reaction-message-${reactionUpdate.message}`, {
-            reaction:reaction,
-            status:status
-        })
+    private async updateReaction(reaction: LikeMessage, status: number) {
+        try {
+            const reactionQuery = await this.likeMessageRepository.findOne({
+                where: {
+                    user: reaction.user,
+                    message: reaction.message
+                }
+            })
+    
+            const reactionUpdate = await this.likeMessageRepository.save({
+                ...reactionQuery,
+                reaction: reaction.reaction
+            })
+    
+            if (!reactionUpdate) return
+    
+            await this.sever.emit(`reaction-message-${reactionUpdate.message}`, {
+                reaction: reaction,
+                status: status
+            })
+        } catch (error) {
+            
+        }
+        
 
     }
 
-    private async deleteReaction(reaction: LikeMessage,status:number) {
+    private async deleteReaction(reaction: LikeMessage, status: number) {
         try {
             await this.likeMessageRepository.delete({
-                user:reaction.user,
-                message:reaction.message
+                user: reaction.user,
+                message: reaction.message
             })
             await this.sever.emit(`reaction-message-${reaction.message}`, {
-                reaction:reaction,
-                status:status
+                reaction: reaction,
+                status: status
             })
         } catch (error) {
 

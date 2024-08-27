@@ -36,7 +36,7 @@ export class GroupChatService {
     }
   }
 
-  async findByUser(req: Request, limit: number) {
+  async findByUser(req: Request) {
     try {
       const user_req = req.headers[USER_ID_HEADER_NAME]
       const groups = await this.groupRepository
@@ -73,7 +73,6 @@ export class GroupChatService {
 
         .where(`g.id IN (SELECT gc.id FROM group_chat gc 
       left join group_member gm on gm.group = gc.id where gm.user = ${user_req})`)
-          .take(limit)
         .getMany()
       
       return groups;
