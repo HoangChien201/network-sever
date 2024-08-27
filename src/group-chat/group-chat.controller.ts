@@ -16,10 +16,10 @@ export class GroupChatController {
     return this.groupChatService.create(createGroupChatDto,req);
   }
 
-  @Get('/get-by-user?')
+  @Get('/get-by-user')
   @UseGuards(AuthGuard)
-  async findByUser(@Req() req:Request,@Query('limit') limit:number):Promise<any> {
-    return this.groupChatService.findByUser(req,limit);
+  async findByUser(@Req() req:Request):Promise<any> {
+    return this.groupChatService.findByUser(req);
   }
 
   @Put('/update/:id')
